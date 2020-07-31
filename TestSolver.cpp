@@ -6,7 +6,8 @@
 int main(int argc, char const* argv[]) {
     uint8_t a = 0;
     srand(time(NULL));
-    while(a < 10) {
+    
+    while(a < 100) {
         printf("solution: %d\n", (uint8_t)a);
         fflush(stdout);
         a += 1;
