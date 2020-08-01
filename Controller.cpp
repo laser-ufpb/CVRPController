@@ -6,6 +6,9 @@
 #include <unistd.h>
 #include <string>
 #include <iostream>
+#include <vector>
+#include "model.h"
+
 using namespace std;
 #define PATH_MAX 256
 #define ARGUMENTS_COUNT 9
@@ -19,59 +22,59 @@ void stopProces(int signal)
     printf("Process terminated\n");
 }
 
-struct tData
+bool parseLine(char *line, tSolution *sol)
 {
-    string competitorName;
-    string path;
-    string execCommand;
-    double baseTimeLimit;
-    double baseSolution;
-    double bestSolution;
-    int isOptimal;
-    int isRounded;
-    int passMark;
+    bool flag = false;
+    char *token = strtok(line, " ");
 
-    tData(int argc, char *arguments[])
+    if (strstr(token, "Route") != NULL)
     {
-        competitorName = string(arguments[1]);
-        path = string(arguments[2]);
-        isRounded = atoi(arguments[3]);
-        passMark = atoi(arguments[4]);
-        baseTimeLimit = atof(arguments[5]);
-        baseSolution = atof(arguments[6]);
-        bestSolution = atof(arguments[7]);
-        isOptimal = atoi(arguments[8]);
-        execCommand = string(arguments[9]);
-        for (int i = 10; i < argc; i++)
+        vector<int> route;
+        token = strtok(NULL, " ");
+        token = strtok(NULL, " ");
+
+        while (token != NULL)
         {
-            execCommand += " " + string(arguments[i]);
+            route.push_back(atoi(token));
+            token = strtok(NULL, " ");
         }
+        sol->routes.push_back(route);
+    }
+    else if (strstr(token, "Cost") != NULL)
+    {
+        token = strtok(NULL, " ");
+        sol->cost = atof(token);
+        flag = true;
     }
 
-};
+    return flag;
+}
 
 int main(int argc, char *argv[])
 {
-    tData data = tData(argc, argv);
+    tData data(argc, argv);
+    tInstance instance(data.path.c_str());
+
     char path[PATH_MAX];
-    
+
     typedef std::chrono::high_resolution_clock Clock;
     typedef std::chrono::milliseconds milliseconds;
-
-    signal(SIGALRM, stopProces);
-    alarm(data.baseTimeLimit/(data.passMark/BASE));
-    // char * command = data.execCommand.c_str();
-    fp = popen(data.execCommand.c_str(), "r");
-    if (fp == NULL);
+    char execCommand[PATH_MAX];
+    sprintf(execCommand, "timeout %.2lfs %s", (data.baseTimeLimit / (data.passMark / BASE)), data.execCommand.c_str());
+    fp = popen( execCommand, "r");
 
     Clock::time_point t0 = Clock::now();
-    int i;
-    while (fgets(path, PATH_MAX, fp) != NULL)
+
+    tSolution sol;
+    while (fgets(path, PATH_MAX, fp))
     {
-        sscanf(path,"solution: %d",&i);
         Clock::time_point t1 = Clock::now();
         milliseconds ms = std::chrono::duration_cast<milliseconds>(t1 - t0);
-        printf("%s | in %f ms\n", path, (float)ms.count() / 1000);
+        if (parseLine(path, &sol)){
+            if(instance.checkInstance(sol))
+                cout << "Feasible Solution\n" << endl;
+        }
+
         fflush(stdout);
     }
 
