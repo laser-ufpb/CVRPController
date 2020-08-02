@@ -15,24 +15,21 @@ struct tData {
     string execCommand;
     double baseTimeLimit;
     double baseSolution;
-    double bestSolution;
+    double bestKnownSolution;
     int isOptimal;
     int isRounded;
     int passMark;
 
     tData(int argc, char* arguments[]) {
-        competitorName = string(arguments[1]);
-        path           = string(arguments[2]); // PATH TO EXECUTABLE
-        isRounded      = atoi(arguments[3]);
-        passMark       = atoi(arguments[4]);
-        baseTimeLimit  = atof(arguments[5]);
-        baseSolution   = atof(arguments[6]);
-        bestSolution   = atof(arguments[7]);
-        isOptimal      = atoi(arguments[8]);
-        execCommand    = string(arguments[9]);
-        // for(int i = 10; i < argc; i++) {
-        //     execCommand += " " + string(arguments[i]);
-        // }
+        competitorName    = string(arguments[1]);
+        path              = string(arguments[2]); // PATH TO EXECUTABLE
+        isRounded         = atoi(arguments[3]);
+        passMark          = atoi(arguments[4]);
+        baseTimeLimit     = atof(arguments[5]);
+        baseSolution      = atof(arguments[6]);
+        isOptimal         = atoi(arguments[7]);
+        bestKnownSolution = atof(arguments[8]);
+        execCommand       = string(arguments[9]);
     }
 };
 
@@ -105,7 +102,7 @@ struct tInstance {
         }
         for(int i = 0; i < dimension; i++) {
             for(int j = 0; j < dimension; j++) {
-                printf("%d ", distanceMatrix[i][j]);
+                printf("%lf ", distanceMatrix[i][j]);
             }
             puts("");
         }

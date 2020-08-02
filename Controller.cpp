@@ -13,7 +13,6 @@
 
 using namespace std;
 #define PATH_MAX        256
-#define ARGUMENTS_COUNT 9
 #define CPU_BASE_REF    2000
 
 FILE* fp;
@@ -70,7 +69,7 @@ void printOutputHeader(tData& data, tInstance& instance) {
 
     char* string_time = new char[64];
     if(!std::strftime(string_time, 64, "%c", tm)) {
-        std::cout << "DEU RUIM CARALHO" << std::endl;
+        std::cout << "ERROR" << std::endl;
         _exit(-1);
     };
 
@@ -111,7 +110,7 @@ void printOutputHeader(tData& data, tInstance& instance) {
         data.baseTimeLimit,
         (data.baseTimeLimit / (data.passMark / (double)CPU_BASE_REF)),
         data.baseSolution,
-        data.bestSolution,
+        data.bestKnownSolution,
         data.isOptimal);
 
     delete string_time;
@@ -128,20 +127,26 @@ int main(int argc, char* argv[]) {
     typedef std::chrono::high_resolution_clock Clock;
     typedef std::chrono::milliseconds milliseconds;
     char execCommand[PATH_MAX];
-    sprintf(execCommand, "timeout %.2lfs %s", (data.baseTimeLimit / (data.passMark / CPU_BASE_REF)), data.execCommand.c_str());
+    sprintf(execCommand, "timeout %.2lfs %s", (data.baseTimeLimit / ((double)data.passMark / CPU_BASE_REF)), data.execCommand.c_str());
     fp = popen(execCommand, "r");
 
     Clock::time_point t0 = Clock::now();
     tSolution sol;
     printOutputHeader(data, instance);
     while(fgets(path, PATH_MAX, fp)) {
+
+        if(parseLine(path, &sol)) 
+            continue;
+
+        if(!instance.checkInstance(sol))
+            continue;
+
         Clock::time_point t1 = Clock::now();
         milliseconds ms      = std::chrono::duration_cast< milliseconds >(t1 - t0);
-        if(parseLine(path, &sol)) {
-            if(instance.checkInstance(sol))
-                cout << sol.cost
-                     << endl;
-        }
+        cout << sol.cost << " " << ms.count()/1000.0 << " "  <<  (ms.count()/1000.0) * ((double )data.passMark / CPU_BASE_REF)  << endl;
+
+        if(sol.cost == data.bestKnownSolution)
+            pclose(fp);
 
         fflush(stdout);
     }
