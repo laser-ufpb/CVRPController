@@ -121,7 +121,7 @@ void printOutputHeader(tData& data, tInstance& instance) {
 
 int main(int argc, char* argv[]) {
     tData data(argc, argv);
-    tInstance instance(data.path.c_str());
+    tInstance instance(data.path.c_str(), data.isRounded);
 
     char path[PATH_MAX];
 

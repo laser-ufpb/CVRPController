@@ -45,10 +45,10 @@ struct tInstance {
     int dimension;
     string instanceName;
     vector< int > demand;
-    vector< vector< int > > distanceMatrix;
+    vector< vector< double > > distanceMatrix;
     int capacity;
 
-    tInstance(const char* instanciaPath) {
+    tInstance(const char* instanciaPath, bool isRounded) {
         FILE* file = fopen(instanciaPath, "r");
 
         if(!file) {
@@ -68,7 +68,7 @@ struct tInstance {
         int lixo;
 
         fscanf(file, "NODE_COORD_SECTION:\n");
-        this->distanceMatrix                    = std::vector< std::vector< int > >(dimension, std::vector< int >(dimension, 0));
+        this->distanceMatrix                    = std::vector< std::vector< double > >(dimension, std::vector< double >(dimension, 0.0));
         std::vector< std::vector< int > > coord = std::vector< std::vector< int > >(dimension, std::vector< int >(3, 0));
 
         for(int i = 0; i < dimension; i++) {
@@ -85,7 +85,8 @@ struct tInstance {
 
         for(int i = 0; i < dimension; i++) {
             for(int j = 0; j < dimension; j++) {
-                this->distanceMatrix[i][j] = (int)round(sqrt(pow((coord[i][1] - coord[j][1]), 2) + pow((coord[i][2] - coord[j][2]), 2)));
+
+                this->distanceMatrix[i][j] = (isRounded) ? (int)round(sqrt(pow((coord[i][1] - coord[j][1]), 2) + pow((coord[i][2] - coord[j][2]), 2))) : sqrt(pow((coord[i][1] - coord[j][1]), 2) + pow((coord[i][2] - coord[j][2]), 2));
             }
         }
 
