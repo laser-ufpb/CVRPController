@@ -22,7 +22,7 @@ struct tData {
 
     tData(int argc, char* arguments[]) {
         competitorName = string(arguments[1]);
-        path           = string(arguments[2]);
+        path           = string(arguments[2]); // PATH TO EXECUTABLE
         isRounded      = atoi(arguments[3]);
         passMark       = atoi(arguments[4]);
         baseTimeLimit  = atof(arguments[5]);
@@ -30,9 +30,9 @@ struct tData {
         bestSolution   = atof(arguments[7]);
         isOptimal      = atoi(arguments[8]);
         execCommand    = string(arguments[9]);
-        for(int i = 10; i < argc; i++) {
-            execCommand += " " + string(arguments[i]);
-        }
+        // for(int i = 10; i < argc; i++) {
+        //     execCommand += " " + string(arguments[i]);
+        // }
     }
 };
 
@@ -56,13 +56,13 @@ struct tInstance {
             exit(EXIT_FAILURE);
         }
 
-        char name[64];
-        char aux[200];
-        fscanf(file, "NAME : %s\n", &name);
-        fscanf(file, "COMMENT : %99[^\n]\n", &aux);
-        fscanf(file, "TYPE : %99[^\n]\n", &aux);
+        char* name = new char[64];
+        char* aux  = new char[200];
+        fscanf(file, "NAME : %s\n", name);
+        fscanf(file, "COMMENT : %99[^\n]\n", aux);
+        fscanf(file, "TYPE : %99[^\n]\n", aux);
         fscanf(file, "DIMENSION : %d\n", &this->dimension);
-        fscanf(file, "EDGE_WEIGHT_TYPE : %99[^\n]\n", &aux);
+        fscanf(file, "EDGE_WEIGHT_TYPE : %99[^\n]\n", aux);
         fscanf(file, "CAPACITY : %d\n", &capacity);
         demand = std::vector< int >(this->dimension, 0);
         int lixo;
@@ -89,6 +89,8 @@ struct tInstance {
             }
         }
 
+        delete aux;
+        delete name;
         fclose(file);
     }
 
