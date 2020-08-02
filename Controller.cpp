@@ -12,8 +12,8 @@
 #include <vector>
 
 using namespace std;
-#define PATH_MAX        256
-#define CPU_BASE_REF    2000
+#define PATH_MAX     256
+#define CPU_BASE_REF 2000
 
 FILE* fp;
 
@@ -48,7 +48,7 @@ char* getCpuInfo() {
     FILE* cpuinfo = fopen("/proc/cpuinfo", "rb");
 
     if(!cpuinfo) {
-        puts("ERROR: I can't open /proc/cpuinfo. Maybe not running Linux.");
+        puts("ERROR: I can't open /proc/cpuinfo. Maybe not running on Linux.");
         _exit(-1);
     }
     char* line_start = (char*)malloc(64 * sizeof(char));
@@ -76,7 +76,7 @@ void printOutputHeader(tData& data, tInstance& instance) {
     char* string_os = new char[128];
     FILE* fp        = popen("lsb_release -ds", "r");
     if(!fp) {
-        puts("ERROR: I can't open process lsb_realease. Maybe not running Linux.");
+        puts("ERROR: I can't open process lsb_realease. Maybe not running on Linux.");
         _exit(-1);
     }
     fgets(string_os, 128, fp);
@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
     printOutputHeader(data, instance);
     while(fgets(path, PATH_MAX, fp)) {
 
-        if(parseLine(path, &sol)) 
+        if(parseLine(path, &sol))
             continue;
 
         if(!instance.checkInstance(sol))
@@ -143,7 +143,7 @@ int main(int argc, char* argv[]) {
 
         Clock::time_point t1 = Clock::now();
         milliseconds ms      = std::chrono::duration_cast< milliseconds >(t1 - t0);
-        cout << sol.cost << " " << ms.count()/1000.0 << " "  <<  (ms.count()/1000.0) * ((double )data.passMark / CPU_BASE_REF)  << endl;
+        cout << sol.cost << " " << ms.count() / 1000.0 << " " << (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF) << endl;
 
         if(sol.cost == data.bestKnownSolution)
             pclose(fp);
