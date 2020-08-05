@@ -21,21 +21,26 @@ struct tData {
     int passMark;
 
     tData(int argc, char* arguments[]) {
-        competitorName    = string(arguments[1]);
-        path              = string(arguments[2]); // PATH TO EXECUTABLE
-        isRounded         = atoi(arguments[3]);
-        passMark          = atoi(arguments[4]);
-        baseTimeLimit     = atof(arguments[5]);
-        baseSolution      = atof(arguments[6]);
+        competitorName = string(arguments[1]);
+        path           = string(arguments[2]); // PATH TO EXECUTABLE
+        isRounded      = atoi(arguments[3]);
+        passMark       = atoi(arguments[4]);
+        baseTimeLimit  = atof(arguments[5]);
+        // baseSolution      = atof(arguments[6]);
+        bestKnownSolution = atof(arguments[6]);
         isOptimal         = atoi(arguments[7]);
-        bestKnownSolution = atof(arguments[8]);
-        execCommand       = string(arguments[9]);
+        execCommand       = string(arguments[8]);
     }
 };
 
 struct tSolution {
     vector< vector< int > > routes;
     double cost;
+    double baseTime;
+    double localTime;
+
+    // tSolution() {}
+    // tSolution(double cost, double baseTime, double localTime) : cost(cost), baseTime(baseTime), localTime(localTime) {}
 };
 
 struct tInstance {
@@ -111,6 +116,7 @@ struct tInstance {
     bool checkInstance(tSolution sol) {
         double solCost       = 0;
         int candidatesServed = 1;
+
         for(vector< int > route : sol.routes) {
             candidatesServed += route.size();
             solCost += distanceMatrix[0][route.at(0)];
@@ -130,7 +136,6 @@ struct tInstance {
 
         if(solCost != sol.cost || candidatesServed < dimension)
             return false;
-
         return true;
     }
 };
