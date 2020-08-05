@@ -148,7 +148,7 @@ void writeOutput(tData& data, tInstance& instance, vector< tSolution > solutions
     primalIntegral *= 100;
     fprintf(output, "Primal Integral: %.10lf\n", primalIntegral);
     fclose(output);
-
+    
     free(string_cpu - 13);
 }
 
