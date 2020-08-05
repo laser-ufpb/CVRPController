@@ -61,7 +61,9 @@ char* getCpuInfo() {
     fclose(cpuinfo);
     return (line_start + 13);
 }
-void writeOutput(tData& data, tInstance& instance, vector<tSolution> solutions) {
+
+//  Solutions is set v and t, so v(0) = solutions[0].cost and t[0] = solutions[0].localTime;
+void writeOutput(tData& data, tInstance& instance, vector< tSolution > solutions) {
     std::locale::global(std::locale("en_US.UTF-8"));
     std::time_t t;
     std::time(&t);
@@ -86,43 +88,68 @@ void writeOutput(tData& data, tInstance& instance, vector<tSolution> solutions) 
 
     string outputName = "DIMACS-CVRP";
     outputName += "-" + data.competitorName + "-" + instance.instanceName + ".out";
-    FILE * output = fopen(outputName.c_str(), "w");
+    FILE* output = fopen(outputName.c_str(), "w");
 
+    // HEADER INFO
     fprintf(output,
-        "12th DIMACS Implementation Challenge: Vehicle Routing \n"
-        "CVRP track                                            \n"
-        "Competitor: %s                                        \n"
-        "%s                                                    \n"
-        "%s"
-        "%s"
-        "PassMark Single Thread Benchmark: %d                  \n"
-        "Time factor: %.2lf (baseline %d)                      \n"
-        "Instance: %s                                          \n"
-        "EUC_2D distances rounded: %d                          \n"
-        "Standardized Time limit: %.0lf secs                   \n"
-        "Local Machine Time Limit: %.2lf secs                  \n"
-        "Base solution: %.2lf                                  \n"
-        "BKS: %.2lf                                            \n"
-        "Optimal: %d                                           \n",
-        data.competitorName.c_str(),
-        string_time,
-        string_cpu,
-        string_os,
-        data.passMark,
-        (data.passMark / (double)CPU_BASE_REF), CPU_BASE_REF,
-        instance.instanceName.c_str(),
-        data.isRounded,
-        data.baseTimeLimit,
-        (data.baseTimeLimit / (data.passMark / (double)CPU_BASE_REF)),
-        data.baseSolution,
-        data.bestKnownSolution,
-        data.isOptimal);
+            "12th DIMACS Implementation Challenge: Vehicle Routing\n"
+            "CVRP track\n"
+            "Competitor: %s\n"
+            "%s\n"
+            "%s"
+            "%s"
+            "PassMark Single Thread Benchmark: %d\n"
+            "Time factor: %.2lf (baseline %d)\n"
+            "Instance: %s\n"
+            "EUC_2D distances rounded: %d\n"
+            "Standardized Time limit: %.0lf secs\n"
+            "Local Machine Time Limit: %.2lf secs\n"
+            "Base solution: %.2lf\n"
+            "BKS: %.2lf\n"
+            "Optimal: %d\n",
+            data.competitorName.c_str(),
+            string_time,
+            string_cpu,
+            string_os,
+            data.passMark,
+            (data.passMark / (double)CPU_BASE_REF), CPU_BASE_REF,
+            instance.instanceName.c_str(),
+            data.isRounded,
+            data.baseTimeLimit,
+            (data.baseTimeLimit / (data.passMark / (double)CPU_BASE_REF)),
+            data.baseSolution,
+            data.bestKnownSolution,
+            data.isOptimal);
 
-    for (tSolution sol : solutions)
-    {
-        fprintf(output, "%.3lf %.3lf %.3lf\n", sol.cost, sol.localTime, sol.baseTime);
+    // SOLVER OUTPUT
+    for(int i = 1; i < solutions.size(); i++) {
+        fprintf(output, "%.3lf %.3lf %.3lf\n", solutions[i].cost, solutions[i].localTime, solutions[i].baseTime);
     }
-    
+
+    // DATE
+    std::time(&t);
+    tm = std::localtime(&t);
+    if(!std::strftime(string_time, 64, "%c", tm)) {
+        std::cout << "ERROR" << std::endl;
+        _exit(-1);
+    };
+    fprintf(output, "%s\n", string_time);
+
+    // PRIMAL INTEGRAL
+    int n                 = solutions.size() - 1;
+    double primalIntegral = 0;
+    for(int i = 1; i < solutions.size(); i++) {
+        // v(i-1)*(t(i)-t(i-1))
+        primalIntegral += (solutions[i - 1].cost * (solutions[i].baseTime - solutions[i - 1].baseTime));
+
+        // * Maybe i should move this out.
+        // v(n)*(T-t(n))to
+        primalIntegral += (solutions[n].cost * (data.baseTimeLimit - solutions[n].baseTime));
+    }
+    primalIntegral /= (data.baseTimeLimit * data.bestKnownSolution);
+    primalIntegral -= 1;
+    primalIntegral *= 100;
+    fprintf(output, "Primal Integral: %lf\n", primalIntegral);
     fclose(output);
     delete string_time;
     delete string_os;
@@ -132,7 +159,7 @@ void writeOutput(tData& data, tInstance& instance, vector<tSolution> solutions) 
 int main(int argc, char* argv[]) {
     tData data(argc, argv);
     tInstance instance(data.path.c_str(), data.isRounded);
-    vector< tSolution > solutions;
+    vector< tSolution > solutions = {{{}, data.bestKnownSolution * 1.1, 0, 0}};
     // solutions.push_back(tSolution(data.baseSolution, 0.0, 0.0));
 
     char path[PATH_MAX];
@@ -153,11 +180,11 @@ int main(int argc, char* argv[]) {
 
         if(!instance.checkInstance(sol))
             continue;
-        
+
         Clock::time_point t1 = Clock::now();
         milliseconds ms      = std::chrono::duration_cast< milliseconds >(t1 - t0);
-        sol.baseTime  = (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF);
-        sol.localTime = ms.count() / 1000.0;
+        sol.baseTime         = (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF);
+        sol.localTime        = ms.count() / 1000.0;
 
         solutions.push_back(sol);
 

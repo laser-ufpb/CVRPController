@@ -21,13 +21,13 @@ struct tData {
     int passMark;
 
     tData(int argc, char* arguments[]) {
-        competitorName = string(arguments[1]);
-        path           = string(arguments[2]); // PATH TO EXECUTABLE
-        isRounded      = atoi(arguments[3]);
-        passMark       = atoi(arguments[4]);
-        baseTimeLimit  = atof(arguments[5]);
-        // baseSolution      = atof(arguments[6]);
+        competitorName    = string(arguments[1]);
+        path              = string(arguments[2]); // PATH TO EXECUTABLE
+        isRounded         = atoi(arguments[3]);
+        passMark          = atoi(arguments[4]);
+        baseTimeLimit     = atof(arguments[5]);
         bestKnownSolution = atof(arguments[6]);
+        baseSolution      = bestKnownSolution * 1.1;
         isOptimal         = atoi(arguments[7]);
         execCommand       = string(arguments[8]);
     }
