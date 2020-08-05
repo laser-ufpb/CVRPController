@@ -143,12 +143,13 @@ void writeOutput(tData& data, tInstance& instance, vector< tSolution > solutions
 
         // * Maybe i should move this out.
         // v(n)*(T-t(n))to
-        primalIntegral += (solutions[n].cost * (data.baseTimeLimit - solutions[n].baseTime));
+        // primalIntegral += (solutions[n].cost * (data.baseTimeLimit - solutions[n].baseTime));
     }
+    primalIntegral += (solutions[n].cost * (data.baseTimeLimit - solutions[n].baseTime));
     primalIntegral /= (data.baseTimeLimit * data.bestKnownSolution);
     primalIntegral -= 1;
     primalIntegral *= 100;
-    fprintf(output, "Primal Integral: %lf\n", primalIntegral);
+    fprintf(output, "Primal Integral: %.10lf\n", primalIntegral);
     fclose(output);
     delete string_time;
     delete string_os;
@@ -158,7 +159,7 @@ void writeOutput(tData& data, tInstance& instance, vector< tSolution > solutions
 int main(int argc, char* argv[]) {
     tData data(argc, argv);
     tInstance instance(data.path.c_str(), data.isRounded);
-    vector< tSolution > solutions = {{{}, data.bestKnownSolution * 1.1, 0, 0}};
+    vector< tSolution > solutions = {{{}, data.baseSolution, 0.0, 0.0}};
     // solutions.push_back(tSolution(data.baseSolution, 0.0, 0.0));
 
     char path[PATH_MAX];
@@ -170,26 +171,35 @@ int main(int argc, char* argv[]) {
     fp = popen(execCommand, "r");
 
     Clock::time_point t0 = Clock::now();
-    tSolution sol;
+
+    tSolution * sol = new tSolution();
 
     while(fgets(path, PATH_MAX, fp)) {
-
-        if(!parseLine(path, &sol))
+        if(!parseLine(path, sol))
             continue;
-        if(!instance.checkInstance(sol))
+
+        if(sol->cost >= data.baseSolution){
+            delete sol;
+            sol = new tSolution();
+            continue;
+        }
+
+        if(!instance.checkInstance(*sol))
             continue;
 
         Clock::time_point t1 = Clock::now();
         milliseconds ms      = std::chrono::duration_cast< milliseconds >(t1 - t0);
-        sol.baseTime         = (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF);
-        sol.localTime        = ms.count() / 1000.0;
+        sol->baseTime         = (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF);
+        sol->localTime        = ms.count() / 1000.0;
 
-        solutions.push_back(sol);
+        solutions.push_back(*sol);
 
-        if(sol.cost == data.bestKnownSolution)
+        if(sol->cost == data.bestKnownSolution)
             pclose(fp);
 
         fflush(stdout);
+        delete sol;
+        sol = new tSolution();
     }
 
     writeOutput(data, instance, solutions);

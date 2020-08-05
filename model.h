@@ -120,6 +120,9 @@ struct tInstance {
         isNodeIn[0] = true;
 
         for(vector< int > route : sol.routes) {
+            if(route[route.size()-1] == 0)
+                route.pop_back();
+
             solCost += distanceMatrix[0][route.at(0)];
 
             int demanda = demand[route.at(0)];
@@ -127,8 +130,10 @@ struct tInstance {
                 return false;
 
             isNodeIn[route.at(0)] = !(isNodeIn[route.at(0)] && true);
-            
+
             for(int i = 1; i < route.size(); i++) {
+ 
+
                 solCost += distanceMatrix[route.at(i - 1)][route.at(i)];
 
                 demanda += demand[route.at(i)];
@@ -143,7 +148,7 @@ struct tInstance {
         for (bool i : isNodeIn)
             if(!i)
                 return false;
-        
+
         if(solCost != sol.cost)
             return false;
 
