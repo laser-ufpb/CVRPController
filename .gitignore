@@ -1,4 +1,9 @@
 .vscode
 Controller
 TestSolver
-LKH
+LKH/LKH
+DIMACS*
+data
+*.sol
+ILS-CVRP
+Vrp*

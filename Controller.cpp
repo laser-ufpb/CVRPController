@@ -69,19 +69,19 @@ void writeOutput(tData& data, tInstance& instance, vector< tSolution > solutions
     std::time(&t);
     std::tm* tm = std::localtime(&t);
 
-    char* string_time = new char[64];
-    if(!std::strftime(string_time, 64, "%c", tm)) {
+    char string_time[64];
+    if(!std::strftime(string_time, 64-1, "%c", tm)) {
         std::cout << "ERROR" << std::endl;
         _exit(-1);
     };
 
-    char* string_os = new char[128];
+    char string_os[128];
     FILE* fp        = popen("lsb_release -ds", "r");
     if(!fp) {
         puts("ERROR: I can't open process lsb_realease. Maybe not running on Linux.");
         _exit(-1);
     }
-    fgets(string_os, 128, fp);
+    fgets(string_os, 128-1, fp);
     pclose(fp);
 
     char* string_cpu = getCpuInfo();
@@ -141,24 +141,21 @@ void writeOutput(tData& data, tInstance& instance, vector< tSolution > solutions
         // v(i-1)*(t(i)-t(i-1))
         primalIntegral += (solutions[i - 1].cost * (solutions[i].baseTime - solutions[i - 1].baseTime));
 
-        // * Maybe i should move this out.
-        // v(n)*(T-t(n))to
-        primalIntegral += (solutions[n].cost * (data.baseTimeLimit - solutions[n].baseTime));
     }
+    primalIntegral += (solutions[n].cost * (data.baseTimeLimit - solutions[n].baseTime));
     primalIntegral /= (data.baseTimeLimit * data.bestKnownSolution);
     primalIntegral -= 1;
     primalIntegral *= 100;
-    fprintf(output, "Primal Integral: %lf\n", primalIntegral);
+    fprintf(output, "Primal Integral: %.10lf\n", primalIntegral);
     fclose(output);
-    delete string_time;
-    delete string_os;
+
     free(string_cpu - 13);
 }
 
 int main(int argc, char* argv[]) {
     tData data(argc, argv);
     tInstance instance(data.path.c_str(), data.isRounded);
-    vector< tSolution > solutions = {{{}, data.bestKnownSolution * 1.1, 0, 0}};
+    vector< tSolution > solutions = {{{}, data.baseSolution, 0.0, 0.0}};
     // solutions.push_back(tSolution(data.baseSolution, 0.0, 0.0));
 
     char path[PATH_MAX];
@@ -170,26 +167,37 @@ int main(int argc, char* argv[]) {
     fp = popen(execCommand, "r");
 
     Clock::time_point t0 = Clock::now();
-    tSolution sol;
 
-    while(fgets(path, PATH_MAX, fp)) {
+    tSolution * sol = new tSolution();
 
-        if(!parseLine(path, &sol))
+    while(fgets(path, PATH_MAX-1, fp)) {
+        if(!parseLine(path, sol))
             continue;
-        if(!instance.checkInstance(sol))
+
+        if(sol->cost >= data.baseSolution){
+            delete sol;
+            sol = new tSolution();
+            continue;
+        }
+
+        if(!instance.checkInstance(*sol))
             continue;
 
         Clock::time_point t1 = Clock::now();
         milliseconds ms      = std::chrono::duration_cast< milliseconds >(t1 - t0);
-        sol.baseTime         = (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF);
-        sol.localTime        = ms.count() / 1000.0;
+        sol->baseTime         = (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF);
+        sol->localTime        = ms.count() / 1000.0;
 
-        solutions.push_back(sol);
+        solutions.push_back(*sol);
 
-        if(sol.cost == data.bestKnownSolution)
+        if(sol->cost == data.bestKnownSolution){
+            delete sol;
             pclose(fp);
-
+            break;
+        }
         fflush(stdout);
+        delete sol;
+        sol = new tSolution();
     }
 
     writeOutput(data, instance, solutions);
