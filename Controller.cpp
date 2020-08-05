@@ -48,7 +48,7 @@ char* getCpuInfo() {
     FILE* cpuinfo = fopen("/proc/cpuinfo", "rb");
 
     if(!cpuinfo) {
-        puts("ERROR: I can't open /proc/cpuinfo. Maybe not running Linux.");
+        puts("ERROR: I can't open /proc/cpuinfo. Maybe not running on Linux.");
         _exit(-1);
     }
     char* line_start = (char*)malloc(64 * sizeof(char));
@@ -76,7 +76,7 @@ void writeOutput(tData& data, tInstance& instance, vector<tSolution> solutions) 
     char* string_os = new char[128];
     FILE* fp        = popen("lsb_release -ds", "r");
     if(!fp) {
-        puts("ERROR: I can't open process lsb_realease. Maybe not running Linux.");
+        puts("ERROR: I can't open process lsb_realease. Maybe not running on Linux.");
         _exit(-1);
     }
     fgets(string_os, 128, fp);
