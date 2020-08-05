@@ -83,7 +83,7 @@ void writeOutput(tData& data, tInstance& instance, vector<tSolution> solutions) 
     pclose(fp);
 
     char* string_cpu = getCpuInfo();
-
+    cout << instance.instanceName << endl;
     string outputName = "DIMACS-CVRP";
     outputName += "-" + data.competitorName + "-" + instance.instanceName + ".out";
     FILE * output = fopen(outputName.c_str(), "w");
@@ -133,7 +133,6 @@ int main(int argc, char* argv[]) {
     tData data(argc, argv);
     tInstance instance(data.path.c_str(), data.isRounded);
     vector< tSolution > solutions;
-    // solutions.push_back(tSolution(data.baseSolution, 0.0, 0.0));
 
     char path[PATH_MAX];
 
@@ -147,10 +146,9 @@ int main(int argc, char* argv[]) {
     tSolution sol;
 
     while(fgets(path, PATH_MAX, fp)) {
-
+        printf("%s\n", path);
         if(!parseLine(path, &sol))
-            continue;
-
+            continue;        
         if(!instance.checkInstance(sol))
             continue;
         

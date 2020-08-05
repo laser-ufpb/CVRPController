@@ -61,6 +61,7 @@ struct tInstance {
         char* name = new char[64];
         char* aux  = new char[200];
         fscanf(file, "NAME : %s\n", name);
+        instanceName = string(name);
         fscanf(file, "COMMENT : %99[^\n]\n", aux);
         fscanf(file, "TYPE : %99[^\n]\n", aux);
         fscanf(file, "DIMENSION : %d\n", &this->dimension);
@@ -115,27 +116,37 @@ struct tInstance {
 
     bool checkInstance(tSolution sol) {
         double solCost       = 0;
-        int candidatesServed = 1;
+        vector<bool> isNodeIn = vector<bool>(dimension, false);
+        isNodeIn[0] = true;
 
         for(vector< int > route : sol.routes) {
-            candidatesServed += route.size();
             solCost += distanceMatrix[0][route.at(0)];
 
             int demanda = demand[route.at(0)];
             if(demanda > capacity)
                 return false;
 
+            isNodeIn[route.at(0)] = !(isNodeIn[route.at(0)] && true);
+            
             for(int i = 1; i < route.size(); i++) {
                 solCost += distanceMatrix[route.at(i - 1)][route.at(i)];
 
+                demanda += demand[route.at(i)];
                 if(demanda > capacity)
                     return false;
+
+                isNodeIn[route.at(i)] = !(isNodeIn[route.at(i)] && true);
             }
             solCost += distanceMatrix[route.at(route.size() - 1)][0];
         }
 
-        if(solCost != sol.cost || candidatesServed < dimension)
+        for (bool i : isNodeIn)
+            if(!i)
+                return false;
+        
+        if(solCost != sol.cost)
             return false;
+
         return true;
     }
 };
