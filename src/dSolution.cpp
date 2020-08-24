@@ -9,7 +9,7 @@ bool dSolution::checkSolution() {
         if(route[route.size() - 1] == 0)
             route.pop_back();
 
-        solCost += sqrt(pow((instance->coord[0][1] - instance->coord[route.at(0)][1]), 2) + pow((instance->coord[0][2] - instance->coord[route.at(0)][2]), 2));
+        solCost += instance->getEdgeWeight(0, route.at(0));
 
         int demanda = instance->demand[route.at(0)];
         if(demanda > instance->capacity)
@@ -19,7 +19,7 @@ bool dSolution::checkSolution() {
 
         for(int i = 1; i < route.size(); i++) {
 
-            solCost += sqrt(pow((instance->coord[0][1] - instance->coord[route.at(0)][1]), 2) + pow((instance->coord[0][2] - instance->coord[route.at(0)][2]), 2));
+            solCost += instance->getEdgeWeight(route.at(i - 1), route.at(i));
 
             demanda += instance->demand[route.at(i)];
             if(demanda > instance->capacity)
@@ -27,7 +27,7 @@ bool dSolution::checkSolution() {
 
             isNodeIn[route.at(i)] = !(isNodeIn[route.at(i)] && true);
         }
-        solCost += sqrt(pow((instance->coord[0][1] - instance->coord[route.at(0)][1]), 2) + pow((instance->coord[0][2] - instance->coord[route.at(0)][2]), 2));
+        solCost += instance->getEdgeWeight(route.at(route.size() - 1), 0);
     }
 
     for(bool i : isNodeIn)
@@ -64,11 +64,11 @@ bool dSolution::parseLine(char* line) {
     return flag;
 }
 
-string dSolution::getStats(std::chrono::high_resolution_clock::time_point beginTime, int passMark){
+string dSolution::getStats(std::chrono::high_resolution_clock::time_point beginTime, int passMark) {
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-    std::chrono::milliseconds ms                     = std::chrono::duration_cast< std::chrono::milliseconds >(t1 - beginTime);
+    std::chrono::milliseconds ms                      = std::chrono::duration_cast< std::chrono::milliseconds >(t1 - beginTime);
 
     char stats[256];
-    sprintf(stats, "%.3lf %.3lf %.3lf\n", cost, (ms.count() / 1000.0) * ((double) passMark / CPU_BASE_REF), ms.count() / 1000.0);
+    sprintf(stats, "%.3lf %.3lf %.3lf\n", cost, (ms.count() / 1000.0) * ((double)passMark / CPU_BASE_REF), ms.count() / 1000.0);
     return string(stats);
 }

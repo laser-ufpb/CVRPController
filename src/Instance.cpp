@@ -9,22 +9,47 @@ Instance::Instance(const char* instanciaPath) {
     }
 
     char name[64];
+    char edgeWeightType[64];
     char aux[200];
 
     fscanf(file, "NAME : %s\n", name);
     this->name = std::string(name);
-    fscanf(file, "COMMENT : %99[^\n]\n", aux);
-    fscanf(file, "TYPE : %99[^\n]\n", aux);
+    fscanf(file, "COMMENT : %199[^\n]\n", aux);
+    fscanf(file, "TYPE : %199[^\n]\n", aux);
     fscanf(file, "DIMENSION : %d\n", &this->dimension);
-    fscanf(file, "EDGE_WEIGHT_TYPE : %99[^\n]\n", aux);
+    fscanf(file, "EDGE_WEIGHT_TYPE : %s\n", edgeWeightType);
+    
+    if(!strcmp(edgeWeightType, "EUC_2D"))
+        this->isExplicit = false;
+    else
+        this->isExplicit = true;
+
+    if(isExplicit)
+        fscanf(file, "EDGE_WEIGHT_FORMAT : %s\n", aux);
+        
     fscanf(file, "CAPACITY : %d\n", &capacity);
 
-    fscanf(file, "NODE_COORD_SECTION:\n");
-    this->coord = std::vector< std::vector< int > >(dimension, std::vector< int >(3, 0));
+    if(!isExplicit){
+        fscanf(file, "NODE_COORD_SECTION\n");
+        this->coordOrMatrix = std::vector< std::vector< double > >(dimension, std::vector< double >(3, 0));
 
-    for(int i = 0; i < dimension; i++) {
-        for(int j = 0; j < 3; j++) {
-            fscanf(file, "%d", &coord[i][j]);
+        for(int i = 0; i < dimension; i++) {
+            for(int j = 0; j < 3; j++) {
+                fscanf(file, "%lf", &coordOrMatrix[i][j]);
+            }
+        }
+    }else{
+        fscanf(file, "EDGE_WEIGHT_SECTION\n");
+        this->coordOrMatrix = std::vector< std::vector< double > >(dimension, std::vector< double >(dimension,0));
+
+        for(int i = 0; i < dimension; i++) {
+            for(int j = 0; j < dimension; j++) {
+                if(i == j)
+                    break;
+                    
+                fscanf(file, "%lf", &coordOrMatrix[i][j]);
+                coordOrMatrix[j][i] = coordOrMatrix[i][j];
+            }
         }
     }
 
@@ -38,4 +63,11 @@ Instance::Instance(const char* instanciaPath) {
     }
 
     fclose(file);
+}
+
+double Instance::getEdgeWeight(int from, int to){
+    if(!isExplicit)
+        return sqrt(pow((coordOrMatrix[from][1] - coordOrMatrix[to][1]), 2) + pow((coordOrMatrix[from][2] - coordOrMatrix[to][2]), 2));
+    else 
+        return coordOrMatrix[from][to];
 }

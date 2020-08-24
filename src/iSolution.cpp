@@ -9,7 +9,7 @@ bool iSolution::checkSolution() {
         if(route[route.size() - 1] == 0)
             route.pop_back();
 
-        solCost += (int)round(sqrt(pow((instance->coord[0][1] - instance->coord[route.at(0)][1]), 2) + pow((instance->coord[0][2] - instance->coord[route.at(0)][2]), 2)));
+        solCost += (int)round(instance->getEdgeWeight(0, route.at(0)));
 
         int demanda = instance->demand[route.at(0)];
         if(demanda > instance->capacity)
@@ -19,7 +19,7 @@ bool iSolution::checkSolution() {
 
         for(int i = 1; i < route.size(); i++) {
 
-            solCost += (int)round(sqrt(pow((instance->coord[route.at(i-1)][1] - instance->coord[route.at(i)][1]), 2) + pow((instance->coord[route.at(i-1)][2] - instance->coord[route.at(i)][2]), 2)));
+            solCost += (int)round(instance->getEdgeWeight(route.at(i-1), route.at(i)));
 
             demanda += instance->demand[route.at(i)];
             if(demanda > instance->capacity)
@@ -27,7 +27,7 @@ bool iSolution::checkSolution() {
 
             isNodeIn[route.at(i)] = !(isNodeIn[route.at(i)] && true);
         }
-        solCost += (int)round(sqrt(pow((instance->coord[route.at(route.size()-1)][1] - instance->coord[0][1]), 2) + pow((instance->coord[route.at(route.size()-1)][2] - instance->coord[0][2]), 2)));
+        solCost += (int)round(instance->getEdgeWeight(route.at(route.size()-1), 0));
     }
 
     for(bool i : isNodeIn)
