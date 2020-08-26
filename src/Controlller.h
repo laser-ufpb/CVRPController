@@ -20,14 +20,22 @@ class Controller {
     OutputFile file;
     std::chrono::high_resolution_clock::time_point beginTime;
     FILE* fp;
-
     template < class T >
     void readStream(T sol);
+
+    double_t primalIntegral;
+    // Equivalent to t(i-1)
+    double lastPassedTime;
+    // Equivalent to v(i-1)
+    Cost lastSolutionCostFound;
 
   public:
     Controller() {}
     Controller(int argc, char* argv[]) : data(Data(argc, argv)), file(OutputFile(data.getNameOfOutputFile())) {
         string header;
+        this->lastPassedTime        = 0;
+        this->primalIntegral        = 0;
+        this->lastSolutionCostFound = data.baseSolution;
         try {
             header = data.createHeader();
             file.writeStringToFile(header);
