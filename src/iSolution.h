@@ -12,7 +12,7 @@ class iSolution : public Solution {
 
     bool parseLine(char* line);
     bool checkSolution();
-    string getStats(std::chrono::high_resolution_clock::time_point beginTime, int passMark);
+    string getStats(std::chrono::high_resolution_clock::time_point beginTime, std::chrono::high_resolution_clock::time_point endTime, int passMark);
 };
 
 #endif

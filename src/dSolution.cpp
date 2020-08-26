@@ -64,9 +64,9 @@ bool dSolution::parseLine(char* line) {
     return flag;
 }
 
-string dSolution::getStats(std::chrono::high_resolution_clock::time_point beginTime, int passMark) {
-    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-    std::chrono::milliseconds ms                      = std::chrono::duration_cast< std::chrono::milliseconds >(t1 - beginTime);
+string dSolution::getStats(std::chrono::high_resolution_clock::time_point beginTime, std::chrono::high_resolution_clock::time_point endTime, int passMark) {
+    // std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+    std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(endTime - beginTime);
 
     char stats[256];
     sprintf(stats, "%.3lf %.3lf %.3lf\n", cost, (ms.count() / 1000.0) * ((double)passMark / CPU_BASE_REF), ms.count() / 1000.0);
