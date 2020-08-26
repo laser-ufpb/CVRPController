@@ -17,6 +17,7 @@ Data::Data(int argc, char* arguments[]) {
 
     this->isOptimal   = atoi(arguments[7]);
     this->execCommand = string(arguments[8]);
+    separateExecCommands();
 
     this->instance = Instance(this->path.c_str());
 }
@@ -28,16 +29,16 @@ string Data::createHeader() {
         header += getTime() + "\n";
         header += getOS();
         header += getCpuInfo();
-    } catch(const char * e) {
+    } catch(const char* e) {
         std::cout << e;
     }
     char aux[LEN];
     sprintf(aux, "PassMark Single Thread Benchmark: %d\n"
-                    "Time factor: %.2lf (baseline %d)\n"
-                    "Instance: %s\n"
-                    "EUC_2D distances rounded: %d\n"
-                    "Standardized Time limit: %.0lf secs\n"
-                    "Local Machine Time Limit: %.2lf secs\n",
+                 "Time factor: %.2lf (baseline %d)\n"
+                 "Instance: %s\n"
+                 "EUC_2D distances rounded: %d\n"
+                 "Standardized Time limit: %.0lf secs\n"
+                 "Local Machine Time Limit: %.2lf secs\n",
             passMark,
             (passMark / (double)CPU_BASE_REF), CPU_BASE_REF,
             instance.name.c_str(),
@@ -47,13 +48,13 @@ string Data::createHeader() {
     header += aux;
     if(isRounded)
         sprintf(aux, "Base solution: %d\n"
-                        "BKS: %d\n"
-                        "Optimal: %d\n",
+                     "BKS: %d\n"
+                     "Optimal: %d\n",
                 baseSolution.iCost, bestKnownSolution.iCost, isOptimal);
     else
         sprintf(aux, "Base solution: %.2lf\n"
-                        "BKS: %.2lf\n"
-                        "Optimal: %d\n",
+                     "BKS: %.2lf\n"
+                     "Optimal: %d\n",
                 baseSolution.dCost, bestKnownSolution.dCost, isOptimal);
 
     header += aux;
@@ -109,4 +110,23 @@ string Data::getCpuInfo() {
 
 string Data::getNameOfOutputFile() {
     return "DIMACS-CVRP-" + competitorName + "-" + instance.name + ".out";
+}
+
+vector< char* > Data::getExecCommandArgvs() {
+    vector< char* > tokens;
+
+    for(int i = 0; i < argvs.size(); i++)
+        tokens.push_back(&argvs[i][0]);
+
+    tokens.push_back(NULL);
+    return tokens;
+}
+
+void Data::separateExecCommands() {
+    istringstream stringStream(this->execCommand);
+    do {
+        string argv;
+        stringStream >> argv;
+        argvs.push_back(argv);
+    } while(stringStream);
 }

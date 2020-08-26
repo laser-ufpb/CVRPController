@@ -1,11 +1,17 @@
 #include "Controlller.h"
 
-template<class T>
+int pid;
+
+void stopProcess(int signal) {
+    kill(pid, SIGKILL);
+}
+
+template < class T >
 void Controller::readStream(T sol) {
-    char path[PATH_MAX];
-    
-    while(fgets(path, PATH_MAX - 1, fp)) {
-        if(!sol.parseLine(path))
+    char line[MAX_LEN];
+
+    while(fgets(line, MAX_LEN - 1, fp)) {
+        if(!sol.parseLine(line))
             continue;
 
         if(sol.cost >= data.baseSolution.iCost) {
@@ -18,21 +24,20 @@ void Controller::readStream(T sol) {
 
         file.writeStringToFile(sol.getStats(beginTime, data.passMark));
 
-        if(sol.cost == data.bestKnownSolution.iCost){
+        if(sol.cost == data.bestKnownSolution.iCost) {
             pclose(fp);
             break;
         }
         sol = iSolution(data.getInstance());
-        fflush(stdout);
     }
 }
 
-template<>
-void Controller::readStream<dSolution>(dSolution sol){
-    char path[PATH_MAX];
-    
-    while(fgets(path, PATH_MAX - 1, fp)) {
-        if(!sol.parseLine(path))
+template <>
+void Controller::readStream< dSolution >(dSolution sol) {
+    char line[MAX_LEN];
+
+    while(fgets(line, MAX_LEN - 1, fp)) {
+        if(!sol.parseLine(line))
             continue;
 
         if(sol.cost >= data.baseSolution.dCost) {
@@ -45,29 +50,24 @@ void Controller::readStream<dSolution>(dSolution sol){
 
         file.writeStringToFile(sol.getStats(beginTime, data.passMark));
 
-        if(sol.cost == data.bestKnownSolution.dCost){
-            pclose(fp);    
+        if(sol.cost == data.bestKnownSolution.dCost) {
+            pclose(fp);
             break;
         }
 
-        sol = dSolution(data.getInstance());    
+        sol = dSolution(data.getInstance());
         fflush(stdout);
     }
 }
 
-void Controller::run(){
+void Controller::run() {
 
-    
-    // signal(SIGALRM, stopProces);
-    // alarm(data.baseTimeLimit / (data.passMark / CPU_BASE_REF));
-    char execCommand[PATH_MAX];
-    sprintf(execCommand, "timeout %.2lfs %s", (data.baseTimeLimit / ((double)data.passMark / CPU_BASE_REF)), data.execCommand.c_str());
-    // sprintf(execCommand, "%s", (data.baseTimeLimit / ((double)data.passMark / CPU_BASE_REF)), data.execCommand.c_str());
+    signal(SIGALRM, stopProcess);
+    alarm(data.baseTimeLimit / (data.passMark / CPU_BASE_REF));
 
-    // char execCommand[PATH_MAX];
-    // sprintf(execCommand, "%s", data.execCommand.c_str());
-    beginTime = std::chrono::high_resolution_clock::now();
-    fp = popen(execCommand, "r");
+    this->beginTime = std::chrono::high_resolution_clock::now();
+
+    pid = popen2(data.getExecCommandArgvs());
 
     if(data.isRounded) {
         iSolution sol = iSolution(data.getInstance());
@@ -77,5 +77,27 @@ void Controller::run(){
         readStream(sol);
     }
 
-    file.~OutputFile();
+    kill(pid, SIGKILL);
+}
+
+int Controller::popen2(vector< char* > argvs) {
+    int fd[2];
+    if(pipe(fd))
+        perror("Pipe failed\n");
+
+    pid_t pid = fork();
+
+    if(pid == 0) {
+        close(fd[0]);
+        if(dup2(fd[1], 1) < 0)
+            perror("Duplicate stdin failed\n");
+
+        execve(argvs[0], argvs.data(), NULL);
+        exit(-1);
+    } else
+        close(fd[1]);
+
+    this->fp = fdopen(fd[0], "r");
+
+    return pid;
 }
