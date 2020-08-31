@@ -26,13 +26,17 @@ string Data::createHeader() {
     string header = "12th DIMACS Implementation Challenge: Vehicle Routing\nCVRP track\nCompetitor: " + competitorName + "\n";
 
     try {
-        header += getTime() + "\n";
         header += getOS();
         header += getCpuInfo();
     } catch(const char* e) {
         std::cout << e;
     }
     char aux[LEN];
+
+    // Add machine's unique identifier
+    sprintf(aux, "hostid: %d\n", gethostid());
+    header += aux;
+
     sprintf(aux, "PassMark Single Thread Benchmark: %d\n"
                  "Time factor: %.2lf (baseline %d)\n"
                  "Instance: %s\n"
@@ -46,21 +50,31 @@ string Data::createHeader() {
             baseTimeLimit,
             (baseTimeLimit / (passMark / (double)CPU_BASE_REF)));
     header += aux;
+
     if(isRounded)
+        // Print Rounded BKS and Base Solution
         sprintf(aux, "Base solution: %d\n"
                      "BKS: %d\n"
                      "Optimal: %d\n",
                 baseSolution.iCost, bestKnownSolution.iCost, isOptimal);
     else
+        // Print Not Runded BKS and Base Solution
         sprintf(aux, "Base solution: %.2lf\n"
                      "BKS: %.2lf\n"
                      "Optimal: %d\n",
                 baseSolution.dCost, bestKnownSolution.dCost, isOptimal);
 
     header += aux;
+    header += getTime() + "\n";
+
+    //Get timestamp since epoch
+    std::time_t secondsSinceEpoch = std::time(0);
+    sprintf(aux, "timestamp: %d\n", secondsSinceEpoch);
+    header += aux;
     return header;
 }
 
+// Get local time
 string Data::getTime() {
     std::locale::global(std::locale("en_US.UTF-8"));
     std::time_t t;
@@ -75,6 +89,7 @@ string Data::getTime() {
     return string(string_time);
 }
 
+// Get OS data;
 string Data::getOS() {
     char string_os[LEN];
     FILE* fp = popen("lsb_release -ds", "r");
@@ -88,6 +103,7 @@ string Data::getOS() {
     return string(string_os);
 }
 
+// Get CPU model and specs
 string Data::getCpuInfo() {
     FILE* cpuinfo = fopen("/proc/cpuinfo", "rb");
 
@@ -108,10 +124,12 @@ string Data::getCpuInfo() {
     return string((line_start + 13));
 }
 
+// Get name of output file
 string Data::getNameOfOutputFile() {
     return "DIMACS-CVRP-" + competitorName + "-" + instance.name + ".out";
 }
 
+// Get Argvs as a vector of cstrings
 vector< char* > Data::getExecCommandArgvs() {
     vector< char* > tokens;
 
@@ -122,6 +140,7 @@ vector< char* > Data::getExecCommandArgvs() {
     return tokens;
 }
 
+// Separate exec command into tokens
 void Data::separateExecCommands() {
     istringstream stringStream(this->execCommand);
     do {

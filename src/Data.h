@@ -3,11 +3,13 @@
 #include "Instance.h"
 #include <chrono>
 #include <cstring>
+#include <ctime>
 #include <iostream>
 #include <math.h>
 #include <sstream>
 #include <stdlib.h>
 #include <string>
+#include <unistd.h>
 #include <vector>
 #define LEN          256
 #define CPU_BASE_REF 2000
