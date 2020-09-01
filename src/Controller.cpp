@@ -55,7 +55,7 @@ void Controller::readStream(T sol) {
     primalIntegral -= 1;
     primalIntegral *= 100;
     char primalIntegralString[32] = "";
-    sprintf(primalIntegralString, "Primal Integral: %.3lf", primalIntegral);
+    sprintf(primalIntegralString, "Primal Integral: %.15lf\n", primalIntegral);
     file.writeStringToFile(std::string(primalIntegralString));
 }
 
