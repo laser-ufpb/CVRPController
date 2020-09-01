@@ -110,7 +110,7 @@ void Controller::readStream< dSolution >(dSolution sol) {
     primalIntegral -= 1;
     primalIntegral *= 100;
     char primalIntegralString[32] = "";
-    sprintf(primalIntegralString, "Primal Integral: %.3lf", primalIntegral);
+    sprintf(primalIntegralString, "Primal Integral: %.10lf", primalIntegral);
     file.writeStringToFile(std::string(primalIntegralString));
 }
 

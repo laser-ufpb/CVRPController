@@ -9,7 +9,7 @@ Data::Data(int argc, char* arguments[]) {
 
     if(isRounded) {
         this->bestKnownSolution.iCost = atoi(arguments[6]);
-        this->baseSolution.iCost      = bestKnownSolution.iCost * 1.1;
+        this->baseSolution.iCost      = round(bestKnownSolution.iCost * 1.1);
     } else {
         this->bestKnownSolution.dCost = atof(arguments[6]);
         this->baseSolution.dCost      = bestKnownSolution.dCost * 1.1;
