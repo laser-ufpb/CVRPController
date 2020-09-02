@@ -55,7 +55,66 @@ void Controller::readStream(T sol) {
     primalIntegral -= 1;
     primalIntegral *= 100;
     char primalIntegralString[32] = "";
+<<<<<<< HEAD
     sprintf(primalIntegralString, "Primal Integral: %.10lf\n", primalIntegral);
+=======
+    sprintf(primalIntegralString, "Primal Integral: %.15lf\n", primalIntegral);
+    file.writeStringToFile(std::string(primalIntegralString));
+}
+
+template <>
+void Controller::readStream< dSolution >(dSolution sol) {
+    char line[MAX_LEN];
+
+    while(fgets(line, MAX_LEN - 1, fp)) {
+        if(!sol.parseLine(line))
+            continue;
+
+        if(sol.cost >= data.baseSolution.dCost) {
+            sol = dSolution(data.getInstance());
+            continue;
+        }
+
+        if(!sol.checkSolution())
+            continue;
+
+        std::chrono::high_resolution_clock::time_point endTime = std::chrono::high_resolution_clock::now();
+        file.writeStringToFile(sol.getStats(beginTime, endTime, data.passMark));
+
+        // Duration between when started to the latest found solution.
+        std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(endTime - beginTime);
+
+        // Primal Integral is calculated based on DIMADS Challenge Rules found in http://dimacs.rutgers.edu/programs/challenge/vrp/cvrp/
+
+        // For each solution i = 1, . . . , n, let v(i) be its value and let t(i) be the time (in seconds) it was found.
+        int v_iMinus1 = this->lastSolutionCostFound.dCost;
+
+        double t_iMinus1 = this->lastPassedTime;
+        double t_i       = (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF);
+
+        // v(i-1)*(t(i) - t(i-1))/BKS*T
+        this->primalIntegral += (v_iMinus1 * (t_i - t_iMinus1) / (data.baseTimeLimit * data.bestKnownSolution.dCost));
+
+        this->lastSolutionCostFound.dCost = sol.cost;
+        this->lastPassedTime              = t_i;
+
+        // Checking if the solution is better or equal to BKS.
+        if(sol.cost == data.bestKnownSolution.dCost) {
+            pclose(fp);
+            break;
+        }
+
+        sol = dSolution(data.getInstance());
+        fflush(stdout);
+    }
+    // Primal Integral is calculated based on DIMADS Challenge Rules found in http://dimacs.rutgers.edu/programs/challenge/vrp/cvrp/
+    // v(n)*(T - t(n))/BKS*T
+    primalIntegral += ((this->lastSolutionCostFound.dCost * (data.baseTimeLimit - lastPassedTime)) / (data.baseTimeLimit * data.bestKnownSolution.dCost));
+    primalIntegral -= 1;
+    primalIntegral *= 100;
+    char primalIntegralString[32] = "";
+    sprintf(primalIntegralString, "Primal Integral: %.10lf", primalIntegral);
+>>>>>>> f04c2ffa4b8495e68face7b78104c9d35a215851
     file.writeStringToFile(std::string(primalIntegralString));
 }
 
