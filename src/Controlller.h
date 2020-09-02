@@ -27,7 +27,7 @@ class Controller {
     // Equivalent to t(i-1)
     double lastPassedTime;
     // Equivalent to v(i-1)
-    Cost lastSolutionCostFound;
+    double lastSolutionCostFound;
 
   public:
     Controller() {}
@@ -36,6 +36,7 @@ class Controller {
         this->lastPassedTime        = 0;
         this->primalIntegral        = 0;
         this->lastSolutionCostFound = data.baseSolution;
+        
         try {
             header = data.createHeader();
             file.writeStringToFile(header);

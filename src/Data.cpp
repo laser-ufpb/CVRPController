@@ -7,16 +7,14 @@ Data::Data(int argc, char* arguments[]) {
     this->passMark       = atoi(arguments[4]);
     this->baseTimeLimit  = atof(arguments[5]);
 
-    if(isRounded) {
-        this->bestKnownSolution.iCost = atoi(arguments[6]);
-        this->baseSolution.iCost      = round(bestKnownSolution.iCost * 1.1);
-    } else {
-        this->bestKnownSolution.dCost = atof(arguments[6]);
-        this->baseSolution.dCost      = bestKnownSolution.dCost * 1.1;
-    }
+    if(isRounded)
+        this->bestKnownSolution = atoi(arguments[6]);
+    else
+        this->bestKnownSolution = atof(arguments[6]);
 
-    this->isOptimal   = atoi(arguments[7]);
-    this->execCommand = string(arguments[8]);
+    this->baseSolution = bestKnownSolution * 1.1;
+    this->isOptimal    = atoi(arguments[7]);
+    this->execCommand  = string(arguments[8]);
     separateExecCommands();
 
     this->instance = Instance(this->path.c_str());
@@ -53,16 +51,16 @@ string Data::createHeader() {
 
     if(isRounded)
         // Print Rounded BKS and Base Solution
-        sprintf(aux, "Base solution: %d\n"
-                     "BKS: %d\n"
+        sprintf(aux, "Base solution: %.3lf\n"
+                     "BKS: %.0lf\n"
                      "Optimal: %d\n",
-                baseSolution.iCost, bestKnownSolution.iCost, isOptimal);
+                baseSolution, bestKnownSolution, isOptimal);
     else
         // Print Not Runded BKS and Base Solution
-        sprintf(aux, "Base solution: %.2lf\n"
-                     "BKS: %.2lf\n"
+        sprintf(aux, "Base solution: %.3lf\n"
+                     "BKS: %.3lf\n"
                      "Optimal: %d\n",
-                baseSolution.dCost, bestKnownSolution.dCost, isOptimal);
+                baseSolution, bestKnownSolution, isOptimal);
 
     header += aux;
     header += getTime() + "\n";
@@ -71,6 +69,7 @@ string Data::createHeader() {
     std::time_t secondsSinceEpoch = std::time(0);
     sprintf(aux, "timestamp: %d\n", secondsSinceEpoch);
     header += aux;
+    header += "Solution Cost - Local Time Machine - Standarized Time\n";
     return header;
 }
 

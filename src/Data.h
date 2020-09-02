@@ -3,6 +3,7 @@
 #include "Instance.h"
 #include <chrono>
 #include <cstring>
+#include <cstdint>
 #include <ctime>
 #include <iostream>
 #include <math.h>
@@ -16,11 +17,6 @@
 
 using namespace std;
 
-union Cost {
-    int iCost;
-    double dCost;
-};
-
 class Data {
     string getTime();
     string getOS();
@@ -31,8 +27,8 @@ class Data {
     int isOptimal;
     int isRounded;
     int passMark;
-    Cost baseSolution;
-    Cost bestKnownSolution;
+    double baseSolution;
+    double bestKnownSolution;
     double baseTimeLimit;
     string competitorName;
     string path;
