@@ -7,22 +7,28 @@ void stopProcess(int signal) {
 }
 
 template < class T >
-void Controller::readStream(T sol) {
+void Controller::readStdoutFromChildProcess(T sol) {
     char line[MAX_LEN];
 
+    pid = popen2(data.getExecCommandArgvs());
+
     while(fgets(line, MAX_LEN - 1, fp)) {
+        // Parse line from child process's stdout
         if(!sol.parseLine(line))
             continue;
 
+        // Check if solution found has cost greater than the value of baseSolution
         if(sol.cost >= data.baseSolution) {
             sol = T(data.getInstance());
             continue;
         }
 
+        // Check if solution is feasible
         if(!sol.checkSolution())
             continue;
 
         std::chrono::high_resolution_clock::time_point endTime = std::chrono::high_resolution_clock::now();
+        // Write stats of solution to OutputFile
         file.writeStringToFile(sol.getStats(beginTime, endTime, data.passMark));
 
         // Duration between when started to the latest found solution.
@@ -66,14 +72,12 @@ void Controller::run() {
 
     this->beginTime = std::chrono::high_resolution_clock::now();
 
-    pid = popen2(data.getExecCommandArgvs());
-
     if(data.isRounded) {
         iSolution sol = iSolution(data.getInstance());
-        readStream(sol);
+        readStdoutFromChildProcess(sol);
     } else {
         dSolution sol = dSolution(data.getInstance());
-        readStream(sol);
+        readStdoutFromChildProcess(sol);
     }
 
     kill(pid, SIGKILL);

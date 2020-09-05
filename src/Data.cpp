@@ -25,7 +25,7 @@ string Data::createHeader() {
 
     try {
         header += getOS();
-        header += getCpuInfo();
+        header += getCpuStats();
     } catch(const char* e) {
         std::cout << e;
     }
@@ -103,7 +103,7 @@ string Data::getOS() {
 }
 
 // Get CPU model and specs
-string Data::getCpuInfo() {
+string Data::getCpuStats() {
     FILE* cpuinfo = fopen("/proc/cpuinfo", "rb");
 
     if(!cpuinfo)

@@ -9,8 +9,9 @@ class OutputFile {
     FILE* file;
 
   public:
-    OutputFile(){}
+    OutputFile() {}
     OutputFile(std::string name) : file(fopen(name.c_str(), "w")) {}
+    // Write string str to OutputFile
     void writeStringToFile(std::string str);
     ~OutputFile() { pclose(file); }
 };

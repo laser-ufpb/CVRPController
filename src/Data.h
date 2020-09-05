@@ -2,8 +2,8 @@
 #define DATA_H
 #include "Instance.h"
 #include <chrono>
-#include <cstring>
 #include <cstdint>
+#include <cstring>
 #include <ctime>
 #include <iostream>
 #include <math.h>
@@ -18,9 +18,12 @@
 using namespace std;
 
 class Data {
+    // Get date and time
     string getTime();
+    // Get competior's OS
     string getOS();
-    string getCpuInfo();
+    // Get competitor's CPU stats
+    string getCpuStats();
     vector< string > argvs;
 
   public:
@@ -38,9 +41,13 @@ class Data {
     Data() {}
     Data(int argc, char* arguments[]);
     Instance* getInstance() { return &instance; }
+    // Create header with data from competitor, compertitor's machine, date
     string createHeader();
+    // Get name of output file
     string getNameOfOutputFile();
+    // Separate string with command to run competitor's program by space
     void separateExecCommands();
+    // Get competitor's program commands separated
     vector< char* > getExecCommandArgvs();
 };
 

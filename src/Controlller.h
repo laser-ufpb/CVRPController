@@ -21,7 +21,7 @@ class Controller {
     std::chrono::high_resolution_clock::time_point beginTime;
     FILE* fp;
     template < class T >
-    void readStream(T sol);
+    void readStdoutFromChildProcess(T sol);
 
     double_t primalIntegral;
     // Equivalent to t(i-1)
@@ -36,7 +36,7 @@ class Controller {
         this->lastPassedTime        = 0;
         this->primalIntegral        = 0;
         this->lastSolutionCostFound = data.baseSolution;
-        
+
         try {
             header = data.createHeader();
             file.writeStringToFile(header);
@@ -45,7 +45,9 @@ class Controller {
         }
     }
 
+    // Run competitor's program
     void run();
+    // Open child process
     int popen2(vector< char* > argvs);
 };
 

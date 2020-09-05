@@ -2,10 +2,10 @@
 #define INSTANCE_H
 
 #include <iostream>
-#include <string>
-#include <vector>
 #include <math.h>
 #include <string.h>
+#include <string>
+#include <vector>
 
 class Instance {
   public:
@@ -18,6 +18,7 @@ class Instance {
 
     Instance() {}
     Instance(const char* instanciaPath);
+    // Get edge weight between two vertices "from" and "to"
     double getEdgeWeight(int from, int to);
 };
 
