@@ -14,8 +14,8 @@ Instance::Instance(const char* instanciaPath) {
 
     fscanf(file, "NAME : %s\n", name);
     this->name = std::string(name);
-    fscanf(file, "COMMENT : %199[^\n]\n", aux);
-    fscanf(file, "TYPE : %199[^\n]\n", aux);
+    fscanf(file, "COMMENT : %*[^\n]\n");
+    fscanf(file, "TYPE : %*[^\n]\n");
     fscanf(file, "DIMENSION : %d\n", &this->dimension);
     fscanf(file, "EDGE_WEIGHT_TYPE : %s\n", edgeWeightType);
     

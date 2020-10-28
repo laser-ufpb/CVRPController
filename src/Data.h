@@ -35,8 +35,10 @@ class Data {
     double baseTimeLimit;
     string competitorName;
     string path;
-    string execCommand;
+    string solverName;
+    string euc_2d;
     Instance instance;
+
 
     Data() {}
     Data(int argc, char* arguments[]);
@@ -45,10 +47,8 @@ class Data {
     string createHeader();
     // Get name of output file
     string getNameOfOutputFile();
-    // Separate string with command to run competitor's program by space
-    void separateExecCommands();
-    // Get competitor's program commands separated
-    vector< char* > getExecCommandArgvs();
+    // Get exec parameters 
+    vector< char* > getExecParameters();
 };
 
 #endif

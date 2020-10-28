@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(this main)
+set(this CVRPController)
 
 project(${this})
 
@@ -12,8 +12,8 @@ add_subdirectory(src)
 add_executable(${this} src/main.cpp)
 
 target_link_libraries(${this} PUBLIC
-    Data
     Controller   
+    Data
     OutputFile
     iSolution
     dSolution

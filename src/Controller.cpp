@@ -6,13 +6,29 @@ void stopProcess(int signal) {
     kill(pid, SIGKILL);
 }
 
+Controller::Controller(int argc, char* argv[]) : data(Data(argc, argv)), file(OutputFile(data.getNameOfOutputFile())) {
+    string header;
+    this->lastPassedTime        = 0;
+    this->primalIntegral        = 0;
+    this->lastSolutionCostFound = data.baseSolution;
+
+    try {
+        header = data.createHeader();
+        file.writeStringToFile(header);
+    } catch(const char* e) {
+        std::cout << e << '\n';
+    }
+
+    this->MAX_LEN = data.instance.dimension * log10(data.instance.dimension) + data.instance.dimension;
+}
+
 template < class T >
 void Controller::readStdoutFromChildProcess(T sol) {
-    char line[MAX_LEN];
+    char line[this->MAX_LEN];
 
-    pid = popen2(data.getExecCommandArgvs());
+    pid = popen2(this->data.getExecParameters());
 
-    while(fgets(line, MAX_LEN - 1, fp)) {
+    while(fgets(line, this->MAX_LEN - 1, fp)) {
         // Parse line from child process's stdout
         if(!sol.parseLine(line))
             continue;

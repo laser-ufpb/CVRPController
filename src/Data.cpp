@@ -7,15 +7,16 @@ Data::Data(int argc, char* arguments[]) {
     this->passMark       = atoi(arguments[4]);
     this->baseTimeLimit  = atof(arguments[5]);
 
-    if(isRounded)
+    if(isRounded){
+        this->euc_2d = "1";
         this->bestKnownSolution = atoi(arguments[6]);
-    else
+    }else{
+        this->euc_2d = "0";
         this->bestKnownSolution = atof(arguments[6]);
-
+    }
     this->baseSolution = bestKnownSolution * 1.1;
     this->isOptimal    = atoi(arguments[7]);
-    this->execCommand  = string(arguments[8]);
-    separateExecCommands();
+    this->solverName  = string(arguments[8]);
 
     this->instance = Instance(this->path.c_str());
 }
@@ -129,22 +130,8 @@ string Data::getNameOfOutputFile() {
 }
 
 // Get Argvs as a vector of cstrings
-vector< char* > Data::getExecCommandArgvs() {
-    vector< char* > tokens;
+vector< char* > Data::getExecParameters() {
+    vector< char* > tokens = {&(this->solverName[0]), &(this->path[0]), &(this->euc_2d[0]) , NULL};
 
-    for(int i = 0; i < argvs.size(); i++)
-        tokens.push_back(&argvs[i][0]);
-
-    tokens.push_back(NULL);
     return tokens;
-}
-
-// Separate exec command into tokens
-void Data::separateExecCommands() {
-    istringstream stringStream(this->execCommand);
-    do {
-        string argv;
-        stringStream >> argv;
-        argvs.push_back(argv);
-    } while(stringStream);
 }

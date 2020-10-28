@@ -10,7 +10,7 @@
 #include <signal.h>
 #include <unistd.h>
 
-#define MAX_LEN      256
+// #define MAX_LEN      170000
 #define CPU_BASE_REF 2000
 
 static int isAlarmSet = 0;
@@ -28,22 +28,11 @@ class Controller {
     double lastPassedTime;
     // Equivalent to v(i-1)
     double lastSolutionCostFound;
-
+    // Max number of characteres in line
+    int MAX_LEN;
   public:
     Controller() {}
-    Controller(int argc, char* argv[]) : data(Data(argc, argv)), file(OutputFile(data.getNameOfOutputFile())) {
-        string header;
-        this->lastPassedTime        = 0;
-        this->primalIntegral        = 0;
-        this->lastSolutionCostFound = data.baseSolution;
-
-        try {
-            header = data.createHeader();
-            file.writeStringToFile(header);
-        } catch(const char* e) {
-            std::cout << e << '\n';
-        }
-    }
+    Controller(int argc, char* argv[]);
 
     // Run competitor's program
     void run();
