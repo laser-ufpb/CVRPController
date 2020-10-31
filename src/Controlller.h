@@ -1,5 +1,5 @@
 #ifndef CONTROLLER_H
-#define CONTROLLER_h
+#define CONTROLLER_H
 
 #include "Data.h"
 #include "OutputFile.h"

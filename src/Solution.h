@@ -18,7 +18,10 @@ class Solution {
     Instance* instance;
     double baseTime;
     double localTime;
-
+    double round(double value) {
+      double v = (int) (value * 100 + .5);
+      return (double) v/100;
+    }
     Solution(Instance* instance) : instance(instance) {}
     virtual ~Solution() {}
     // Parse line from solution found by child process

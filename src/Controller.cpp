@@ -34,7 +34,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
             continue;
 
         // Check if solution found has cost greater than the value of baseSolution
-        if(sol.cost >= data.baseSolution) {
+        if(sol.cost - data.baseSolution >= numeric_limits<double>::epsilon()) {
             sol = T(data.getInstance());
             continue;
         }
@@ -65,7 +65,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
         this->lastPassedTime        = t_i;
 
         // Checking if the solution is better or equal to BKS.
-        if(sol.cost <= data.bestKnownSolution) {
+        if(fabs(sol.cost - data.bestKnownSolution) <= numeric_limits<double>::epsilon()) {
             pclose(fp);
             break;
         }

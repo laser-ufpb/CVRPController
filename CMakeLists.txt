@@ -18,7 +18,6 @@ target_link_libraries(${this} PUBLIC
     iSolution
     dSolution
     Instance
-    Solution 
 )
 
 target_include_directories(${this} PUBLIC 
