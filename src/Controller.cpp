@@ -58,6 +58,9 @@ void Controller::readStdoutFromChildProcess(T sol) {
         double t_iMinus1 = this->lastPassedTime;
         double t_i       = (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF);
 
+        // Round double to three decimal places
+        t_i = ( round(( t_i * 1000 ) + .5 )) / 1000.0;
+
         // v(i-1)*(t(i) - t(i-1))/BKS*T
         this->primalIntegral += (v_iMinus1 * (t_i - t_iMinus1) / (data.baseTimeLimit * data.bestKnownSolution));
 
