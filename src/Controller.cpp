@@ -19,7 +19,7 @@ Controller::Controller(int argc, char* argv[]) : data(Data(argc, argv)), file(Ou
         std::cout << e << '\n';
     }
 
-    this->MAX_LEN = data.instance.dimension * log10(data.instance.dimension) + data.instance.dimension;
+    this->MAX_LEN = data.instance.dimension * (log10(data.instance.dimension) + 1) + data.instance.dimension;
 }
 
 template < class T >
@@ -32,17 +32,11 @@ void Controller::readStdoutFromChildProcess(T sol) {
         // Parse line from child process's stdout
         if(!sol.parseLine(line))
             continue;
-
-        // Check if solution found has cost greater than the value of baseSolution
-        if(sol.cost - data.baseSolution >= numeric_limits<double>::epsilon()) {
+        // Check if solution found has cost greater than the value of baseSolution and if is not feasible
+        if(((sol.cost - data.baseSolution) > numeric_limits<double>::epsilon()) || !sol.checkSolution() ) {
             sol = T(data.getInstance());
             continue;
         }
-
-        // Check if solution is feasible
-        if(!sol.checkSolution())
-            continue;
-
         std::chrono::high_resolution_clock::time_point endTime = std::chrono::high_resolution_clock::now();
         // Write stats of solution to OutputFile
         file.writeStringToFile(sol.getStats(beginTime, endTime, data.passMark));
