@@ -18,7 +18,7 @@ make
 
 ### How to run:
 ```sh
-./CVRPController <Competitor ID> <Instance path> <Is rounded [0/1]> <PassMark Value> <Time to run> <Instance BKS> <If BKS is optimal [0/1]> <Path to solver>
+./CVRPController <Competitor ID> <Instance path> <Is rounded [0/1]> <PassMark Value> <Time limit> <Instance BKS> <If BKS is optimal [0/1]> <Path to solver>
 ```
 
 ### Example:
