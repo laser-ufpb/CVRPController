@@ -33,7 +33,7 @@ string Data::createHeader() {
     char aux[LEN];
 
     // Add machine's unique identifier
-    sprintf(aux, "hostid: %d\n", gethostid());
+    sprintf(aux, "hostid: %ld\n", gethostid());
     header += aux;
 
     sprintf(aux, "PassMark Single Thread Benchmark: %d\n"
@@ -68,7 +68,7 @@ string Data::createHeader() {
 
     //Get timestamp since epoch
     std::time_t secondsSinceEpoch = std::time(0);
-    sprintf(aux, "timestamp: %d\n", secondsSinceEpoch);
+    sprintf(aux, "timestamp: %li\n", secondsSinceEpoch);
     header += aux;
     header += "Solution Cost - Local Time Machine - Standarized Time\n";
     return header;
