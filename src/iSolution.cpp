@@ -34,8 +34,7 @@ bool iSolution::checkSolution() {
         if(!i)
             return false;
 
-    if(solCost != this->cost)
-        return false;
+    this->cost = solCost;
 
     return true;
 }

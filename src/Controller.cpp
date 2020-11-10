@@ -32,7 +32,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
         if(!sol.parseLine(line))
             continue;
         // Check if solution found has cost greater than the value of baseSolution and if is not feasible
-        if(((sol.cost - data.baseSolution) > numeric_limits< double >::epsilon()) || !sol.checkSolution()) {
+        if( !sol.checkSolution() || ((sol.cost - this->lastSolutionCostFound) > numeric_limits<double>::epsilon()) ) {
             sol = T(data.getInstance());
             continue;
         }
@@ -52,7 +52,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
         double t_i       = (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF);
 
         // Round double to three decimal places
-        t_i = (round((t_i * 1000) + .5)) / 1000.0;
+        t_i = ( (int) (( t_i * 1000 ) + .5 )) / 1000.0;
 
         // v(i-1)*(t(i) - t(i-1))/BKS*T
         this->primalIntegral += (v_iMinus1 * (t_i - t_iMinus1) / (data.baseTimeLimit * data.bestKnownSolution));

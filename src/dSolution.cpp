@@ -34,8 +34,7 @@ bool dSolution::checkSolution() {
         if(!i)
             return false;
 
-    if(fabs(round(solCost) - this->cost) >= numeric_limits<double>::epsilon())
-        return false;
+    this->cost = round(solCost);
 
     return true;
 }
