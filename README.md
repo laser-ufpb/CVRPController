@@ -10,7 +10,7 @@ git clone https://github.com/laser-ufpb/CVRPController
 cd CVRPController
 mkdir build
 cd build
-cmake .
+cmake ..
 make
 ```
 
