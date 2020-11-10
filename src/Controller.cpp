@@ -1,4 +1,4 @@
-#include "Controlller.h"
+#include "Controller.h"
 
 int pid;
 
@@ -11,7 +11,6 @@ Controller::Controller(int argc, char* argv[]) : data(Data(argc, argv)), file(Ou
     this->lastPassedTime        = 0;
     this->primalIntegral        = 0;
     this->lastSolutionCostFound = data.baseSolution;
-
     try {
         header = data.createHeader();
         file.writeStringToFile(header);
@@ -62,7 +61,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
         this->lastPassedTime        = t_i;
 
         // Checking if the solution is better or equal to BKS.
-        if(fabs(sol.cost - data.bestKnownSolution) <= numeric_limits<double>::epsilon()) {
+        if(fabs(sol.cost - data.bestKnownSolution) <= numeric_limits< double >::epsilon()) {
             pclose(fp);
             break;
         }
