@@ -80,7 +80,8 @@ void Controller::readStdoutFromChildProcess(T sol) {
 void Controller::run() {
 
     signal(SIGALRM, stopProcess);
-    alarm(data.baseTimeLimit / (data.passMark / CPU_BASE_REF));
+    int timeLimit = (data.baseTimeLimit / ((double) data.passMark / CPU_BASE_REF));
+    alarm(timeLimit);
 
     this->beginTime = std::chrono::high_resolution_clock::now();
 
@@ -92,7 +93,7 @@ void Controller::run() {
         readStdoutFromChildProcess(sol);
     }
 
-    kill(pid, SIGKILL);
+    // kill(pid, SIGKILL);
 }
 
 int Controller::popen2(vector< char* > argvs) {
