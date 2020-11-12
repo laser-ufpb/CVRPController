@@ -70,7 +70,7 @@ string Data::createHeader() {
     std::time_t secondsSinceEpoch = std::time(0);
     sprintf(aux, "timestamp: %li\n", secondsSinceEpoch);
     header += aux;
-    header += "Solution Cost - Local Time Machine - Standarized Time\n";
+    header += "Solution value, local machine time, standardized time\n";
     return header;
 }
 
