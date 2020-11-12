@@ -93,7 +93,7 @@ void Controller::run() {
         readStdoutFromChildProcess(sol);
     }
 
-    // kill(pid, SIGKILL);
+    kill(pid, SIGKILL);
 }
 
 int Controller::popen2(vector< char* > argvs) {
