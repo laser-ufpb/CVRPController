@@ -11,14 +11,12 @@ dir=InstancesRounded/
 
 for file in `ls ${dir}`
 do
-    echo ${file}
-    ./../build/CVRPController ${competitorName} ${dir}${file} 1 ${passMark} ${timeLimit[$file]} ${instancesBKS[$file]} ${instancesIsOptimal[$file]} ${solverPath}
+    echo ./build/CVRPController ${competitorName} ${dir}${file} 1 ${passMark} ${timeLimit[$file]} ${instancesBKS[$file]} ${instancesIsOptimal[$file]} ${solverPath}
 done
 
 dir=InstancesNotRounded/
 
 for file in `ls ${dir}`
 do
-    echo ${file}
-    ./../build/CVRPController ${competitorName} ${dir}${file} 0 ${passMark} ${timeLimit[$file]} ${instancesBKS[$file]} ${instancesIsOptimal[$file]} ${solverPath}
+    echo ./build/CVRPController ${competitorName} ${dir}${file} 0 ${passMark} ${timeLimit[$file]} ${instancesBKS[$file]} ${instancesIsOptimal[$file]} ${solverPath}
 done
