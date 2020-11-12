@@ -80,7 +80,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
 void Controller::run() {
 
     signal(SIGALRM, stopProcess);
-    int timeLimit = (data.baseTimeLimit / ((double) data.passMark / CPU_BASE_REF));
+    int timeLimit = round(data.baseTimeLimit / ((double) data.passMark / CPU_BASE_REF));
     alarm(timeLimit);
 
     this->beginTime = std::chrono::high_resolution_clock::now();
