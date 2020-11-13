@@ -14,7 +14,7 @@ cmake ..
 make
 ```
 
-Testing controller with a dummy solver:
+Testing the Controller with a dummy solver:
 
 ```sh
 make test
