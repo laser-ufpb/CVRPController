@@ -111,7 +111,7 @@ string Data::getOS() {
 
 // Get CPU model and specs
 string Data::getCpuStats() {
-
+    char string_os[LEN];
 #ifdef __linux__
     FILE* cpuinfo = fopen("/proc/cpuinfo", "rb");
 
