@@ -10,9 +10,9 @@ set(${this} C CXX)
 add_subdirectory(src)
 
 add_executable(${this} src/main.cpp)
-add_executable(DummySolver TestSolver.cpp)
+add_executable(DummySolver DummySolver.cpp)
 enable_testing()
-add_test(NAME testSolver COMMAND ${this} Teste ../InstancesRounded/X-n101-k25.vrp 1 2000 60 27591 1 DummySolver)
+add_test(NAME DummySolver COMMAND ${this} Dummy ../InstancesRounded/X-n101-k25.vrp 1 2000 60 27591 1 DummySolver)
 
 target_link_libraries(${this} PUBLIC
     Controller   
