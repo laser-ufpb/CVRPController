@@ -59,7 +59,7 @@ string Data::createHeader() {
     else
         // Print Not Runded BKS and Base Solution
         sprintf(aux, "Base solution: %.3lf\n"
-                     "BKS: %.3lf\n"
+                     "BKS: %.2lf\n"
                      "Optimal: %d\n",
                 baseSolution, bestKnownSolution, isOptimal);
 
