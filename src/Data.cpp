@@ -7,16 +7,16 @@ Data::Data(int argc, char* arguments[]) {
     this->passMark       = atoi(arguments[4]);
     this->baseTimeLimit  = atof(arguments[5]);
 
-    if(isRounded){
-        this->euc_2d = "1";
+    if(isRounded) {
+        this->euc_2d            = "1";
         this->bestKnownSolution = atoi(arguments[6]);
-    }else{
-        this->euc_2d = "0";
+    } else {
+        this->euc_2d            = "0";
         this->bestKnownSolution = atof(arguments[6]);
     }
     this->baseSolution = bestKnownSolution * 1.1;
     this->isOptimal    = atoi(arguments[7]);
-    this->solverName  = string(arguments[8]);
+    this->solverName   = string(arguments[8]);
 
     this->instance = Instance(this->path.c_str());
 }
@@ -92,10 +92,16 @@ string Data::getTime() {
 // Get OS data;
 string Data::getOS() {
     char string_os[LEN];
+#ifdef __linux__
     FILE* fp = popen("lsb_release -ds", "r");
-
-    if(!fp)
-        throw "ERROR: I can't open process lsb_realease. Maybe not running on Linux.";
+    if(!fp) throw "ERROR: I can't open process lsb_realease. Maybe not running on Linux.";
+#elif __OpenBSD__ || __freebsd__
+    FILE* fp = popen("uname -rs", "r");
+    if(!fp) throw "ERROR: I can't open process uname.";
+#elif __APPLE__ && __MACH__
+    FILE* fp = popen("sw_vers -productName", "r");
+    if(!fp) throw "ERROR: I can't open process sw_vers.";
+#endif
 
     fgets(string_os, LEN - 1, fp);
     pclose(fp);
@@ -105,6 +111,8 @@ string Data::getOS() {
 
 // Get CPU model and specs
 string Data::getCpuStats() {
+
+#ifdef __linux__
     FILE* cpuinfo = fopen("/proc/cpuinfo", "rb");
 
     if(!cpuinfo)
@@ -122,6 +130,24 @@ string Data::getCpuStats() {
     fclose(cpuinfo);
 
     return string((line_start + 13));
+#elif __OpenBSD__ || __freebsd__
+    FILE* fp = popen("sysctl -n hw.model", "r");
+    if(!fp) throw "ERROR: I can't open process sysctl to get CPU info.";
+
+    fgets(string_os, LEN - 1, fp);
+    pclose(fp);
+
+    return string(string_os);
+#elif __APPLE__ && __MACH__
+    FILE* fp = popen("sysctl -n machdep.cpu.brand_string", "r");
+    if(!fp) throw "ERROR: I can't open process sysctl to get CPU info.";
+
+    fgets(string_os, LEN - 1, fp);
+    pclose(fp);
+
+    return string(string_os);
+#endif
+    throw "Error OS not supported.";
 }
 
 // Get name of output file
@@ -131,7 +157,7 @@ string Data::getNameOfOutputFile() {
 
 // Get Argvs as a vector of cstrings
 vector< char* > Data::getExecParameters() {
-    vector< char* > tokens = {&(this->solverName[0]), &(this->path[0]), &(this->euc_2d[0]) , NULL};
+    vector< char* > tokens = {&(this->solverName[0]), &(this->path[0]), &(this->euc_2d[0]), NULL};
 
     return tokens;
 }
