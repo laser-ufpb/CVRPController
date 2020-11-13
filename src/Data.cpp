@@ -41,13 +41,13 @@ string Data::createHeader() {
                  "Instance: %s\n"
                  "EUC_2D distances rounded: %d\n"
                  "Standardized Time limit: %.0lf secs\n"
-                 "Local Machine Time Limit: %.2lf secs\n",
+                 "Local Machine Time Limit: %.0lf secs\n",
             passMark,
             (passMark / (double)CPU_BASE_REF), CPU_BASE_REF,
             instance.name.c_str(),
             isRounded,
             baseTimeLimit,
-            (baseTimeLimit / (passMark / (double)CPU_BASE_REF)));
+            round(baseTimeLimit / (passMark / (double)CPU_BASE_REF)));
     header += aux;
 
     if(isRounded)
@@ -70,7 +70,7 @@ string Data::createHeader() {
     std::time_t secondsSinceEpoch = std::time(0);
     sprintf(aux, "timestamp: %li\n", secondsSinceEpoch);
     header += aux;
-    header += "Solution Cost - Local Time Machine - Standarized Time\n";
+    header += "Solution value, local machine time, standardized time\n";
     return header;
 }
 
