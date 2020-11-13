@@ -68,6 +68,6 @@ string dSolution::getStats(std::chrono::high_resolution_clock::time_point beginT
     std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(endTime - beginTime);
 
     char stats[256];
-    sprintf(stats, "%.3lf %.3lf %.3lf\n", cost, ms.count() / 1000.0, (ms.count() / 1000.0) * ((double)passMark / CPU_BASE_REF));
+    sprintf(stats, "%.2lf %.3lf %.3lf\n", cost, ms.count() / 1000.0, (ms.count() / 1000.0) * ((double)passMark / CPU_BASE_REF));
     return string(stats);
 }
