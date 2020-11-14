@@ -32,8 +32,21 @@ string Data::createHeader() {
     }
     char aux[LEN];
 
-    // Add machine's unique identifier
+// Add machine's unique identifier
+#ifdef __linux__
     sprintf(aux, "hostid: %ld\n", gethostid());
+#elif __OpenBSD__ || __freebsd__
+    FILE* fp = popen("ifconfig en0 | awk '/lladdr/ {print $2}'", "r");
+    if(!fp) throw "ERROR: I can't open process uname.";
+    fgets(aux, LEN - 1, fp);
+    pclose(fp);
+#elif __APPLE__ && __MACH__
+    FILE* fp = popen("ifconfig en0 | awk '/ether/ {print $2}'", "r");
+    if(!fp) throw "ERROR: I can't open process sw_vers.";
+    fgets(aux, LEN - 1, fp);
+    pclose(fp);
+#endif
+
     header += aux;
 
     sprintf(aux, "PassMark Single Thread Benchmark: %d\n"
