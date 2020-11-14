@@ -30,12 +30,13 @@ string Data::createHeader() {
     } catch(const char* e) {
         std::cout << e;
     }
-    char aux[LEN];
+    char aux[LEN] = {};
 
 // Add machine's unique identifier
 #ifdef __linux__
     sprintf(aux, "hostid: %ld\n", gethostid());
 #elif __OpenBSD__ || __freebsd__
+    header += "hostid: ";
     char string_hostid[LEN];
     FILE* fp = popen("ifconfig | awk '/lladdr/ {print $2}'", "r");
     if(!fp) throw "ERROR: I can't open process ifconfig.";
@@ -49,8 +50,11 @@ string Data::createHeader() {
         }
         _aux++;
     }
+    *(aux + added) = '\n';
+    added++;
     pclose(fp);
 #elif __APPLE__ && __MACH__
+    header += "hostid: ";
     char string_hostid[LEN];
     FILE* fp = popen("ifconfig | awk '/ether/ {print $2}'", "r");
     if(!fp) throw "ERROR: I can't open process ifconfig.";
@@ -64,6 +68,8 @@ string Data::createHeader() {
         }
         _aux++;
     }
+    *(aux + added) = '\n';
+    added++;
     pclose(fp);
 #endif
 
