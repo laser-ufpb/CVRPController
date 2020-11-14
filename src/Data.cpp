@@ -36,14 +36,34 @@ string Data::createHeader() {
 #ifdef __linux__
     sprintf(aux, "hostid: %ld\n", gethostid());
 #elif __OpenBSD__ || __freebsd__
-    FILE* fp = popen("ifconfig en0 | awk '/lladdr/ {print $2}'", "r");
-    if(!fp) throw "ERROR: I can't open process uname.";
-    fgets(aux, LEN - 1, fp);
+    char string_hostid[LEN];
+    FILE* fp = popen("ifconfig | awk '/lladdr/ {print $2}'", "r");
+    if(!fp) throw "ERROR: I can't open process ifconfig.";
+    fgets(string_hostid, LEN - 1, fp);
+    char* _aux = string_hostid;
+    int added  = 0;
+    while(isalnum(*_aux) || *_aux == ':') {
+        if(*_aux != ':') {
+            *(aux + added) = *_aux;
+            added++;
+        }
+        _aux++;
+    }
     pclose(fp);
 #elif __APPLE__ && __MACH__
-    FILE* fp = popen("ifconfig en0 | awk '/ether/ {print $2}'", "r");
-    if(!fp) throw "ERROR: I can't open process sw_vers.";
-    fgets(aux, LEN - 1, fp);
+    char string_hostid[LEN];
+    FILE* fp = popen("ifconfig | awk '/ether/ {print $2}'", "r");
+    if(!fp) throw "ERROR: I can't open process ifconfig.";
+    fgets(string_hostid, LEN - 1, fp);
+    char* _aux = string_hostid;
+    int added  = 0;
+    while(isalnum(*_aux) || *_aux == ':') {
+        if(*_aux != ':') {
+            *(aux + added) = *_aux;
+            added++;
+        }
+        _aux++;
+    }
     pclose(fp);
 #endif
 
