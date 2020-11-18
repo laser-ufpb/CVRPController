@@ -5,10 +5,9 @@ FILE* solver_fp;
 
 void stopProcess(int signal) {
     int gpid = getpgid(pid);
-    printf("trying to kill %d(pgid %d) sending sigkill to %d\n", pid, gpid, -gpid);
-    int ret = kill(pid, SIGKILL);
+    int ret  = kill(pid, SIGKILL);
     if(ret)
-        perror("ERRO NO STOP PROCESS");
+        perror("ERROR:");
     fclose(solver_fp);
 }
 
