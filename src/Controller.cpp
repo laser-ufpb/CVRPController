@@ -9,7 +9,7 @@ void stopProcess(int signal) {
     int ret = kill(pid, SIGKILL);
     if(ret)
         perror("ERRO NO STOP PROCESS");
-    // fclose(solver_fp);
+    fclose(solver_fp);
 }
 
 Controller::Controller(int argc, char* argv[]) : data(Data(argc, argv)), file(OutputFile(data.getNameOfOutputFile())) {
