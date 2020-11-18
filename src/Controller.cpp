@@ -1,9 +1,15 @@
 #include "Controller.h"
 
 int pid;
+FILE* solver_fp;
 
 void stopProcess(int signal) {
-    kill(pid, SIGKILL);
+    int gpid = getpgid(pid);
+    printf("trying to kill %d(pgid %d) sending sigkill to %d\n", pid, gpid, -gpid);
+    int ret = kill(-1, SIGKILL);
+    if(ret)
+        perror("ERRO NO STOP PROCESS");
+    // fclose(solver_fp);
 }
 
 Controller::Controller(int argc, char* argv[]) : data(Data(argc, argv)), file(OutputFile(data.getNameOfOutputFile())) {
@@ -32,7 +38,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
         if(!sol.parseLine(line))
             continue;
         // Check if solution found has cost greater than the value of baseSolution and if is not feasible
-        if( !sol.checkSolution() || ((sol.cost - this->lastSolutionCostFound) > numeric_limits<double>::epsilon()) ) {
+        if(!sol.checkSolution() || ((sol.cost - this->lastSolutionCostFound) > numeric_limits< double >::epsilon())) {
             sol = T(data.getInstance());
             continue;
         }
@@ -52,7 +58,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
         double t_i       = (ms.count() / 1000.0) * ((double)data.passMark / CPU_BASE_REF);
 
         // Round double to three decimal places
-        t_i = ( (int) (( t_i * 1000 ) + .5 )) / 1000.0;
+        t_i = ((int)((t_i * 1000) + .5)) / 1000.0;
 
         // v(i-1)*(t(i) - t(i-1))/BKS*T
         this->primalIntegral += (v_iMinus1 * (t_i - t_iMinus1) / (data.baseTimeLimit * data.bestKnownSolution));
@@ -80,7 +86,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
 void Controller::run() {
 
     signal(SIGALRM, stopProcess);
-    int timeLimit = round(data.baseTimeLimit / ((double) data.passMark / CPU_BASE_REF));
+    int timeLimit = round(data.baseTimeLimit / ((double)data.passMark / CPU_BASE_REF));
     alarm(timeLimit);
 
     this->beginTime = std::chrono::high_resolution_clock::now();
@@ -113,7 +119,7 @@ int Controller::popen2(vector< char* > argvs) {
     } else
         close(fd[1]);
 
-    this->fp = fdopen(fd[0], "r");
-
+    this->fp  = fdopen(fd[0], "r");
+    solver_fp = this->fp;
     return pid;
 }
