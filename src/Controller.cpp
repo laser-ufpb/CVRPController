@@ -1,9 +1,14 @@
 #include "Controller.h"
 
 int pid;
+FILE* solver_fp;
 
 void stopProcess(int signal) {
-    kill(pid, SIGKILL);
+    int gpid = getpgid(pid);
+    int ret  = kill(pid, SIGKILL);
+    if(ret)
+        perror("ERROR:");
+    fclose(solver_fp);
 }
 
 Controller::Controller(int argc, char* argv[]) : data(Data(argc, argv)), file(OutputFile(data.getNameOfOutputFile())) {
@@ -31,8 +36,10 @@ void Controller::readStdoutFromChildProcess(T sol) {
         // Parse line from child process's stdout
         if(!sol.parseLine(line))
             continue;
+
         // Check if solution found has cost greater than the value of baseSolution and if is not feasible
-        if( !sol.checkSolution() || ((sol.cost - this->lastSolutionCostFound) > numeric_limits<double>::epsilon()) ) {
+        double eps = data.isRounded ? 0.0 : numeric_limits<double>::epsilon();
+        if( !sol.checkSolution() || ((this->lastSolutionCostFound - sol.cost) < eps) ) {
             sol = T(data.getInstance());
             continue;
         }
@@ -61,7 +68,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
         this->lastPassedTime        = t_i;
 
         // Checking if the solution is better or equal to BKS.
-        if(fabs(sol.cost - data.bestKnownSolution) <= numeric_limits< double >::epsilon()) {
+        if(data.isOptimal && (sol.cost - data.bestKnownSolution) <= numeric_limits< double >::epsilon()) {
             pclose(fp);
             break;
         }
@@ -113,7 +120,8 @@ int Controller::popen2(vector< char* > argvs) {
     } else
         close(fd[1]);
 
-    this->fp = fdopen(fd[0], "r");
+    this->fp  = fdopen(fd[0], "r");
+    solver_fp = this->fp;
 
     return pid;
 }
