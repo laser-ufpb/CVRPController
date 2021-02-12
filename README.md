@@ -51,7 +51,7 @@ sh CVRP-Script1.sh
 ```
 _For more examples and usage, please refer to the [Competition Rules](http://dimacs.rutgers.edu/files/1815/9845/6740/CVRP_Competition_Rules.pdf)._
 
-### Calling solver indirectly via shell script
+### How to call the solver indirectly via shell script
 Suppose a file named <i>solver</i> has the following content:
 ```sh
 #!/usr/bin/env bash
