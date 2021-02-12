@@ -57,7 +57,7 @@ Suppose a file named <i>solver</i> has the following content:
 #!/usr/bin/env bash
 ./real-solver $1 $2 
 ```
-Therefore, you can use <i>solver</i> instead of the original executable file <i>real-solver</i> (which could have other command-line arguments in addition to the two defined in the challenge rules.). 
+Therefore, you can use <i>solver</i> instead of the original executable file <i>real-solver</i> (which could have other command-line arguments in addition to the two defined in the challenge rules). 
 
 ## Meta
 
