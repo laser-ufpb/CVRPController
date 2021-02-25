@@ -51,6 +51,14 @@ sh CVRP-Script1.sh
 ```
 _For more examples and usage, please refer to the [Competition Rules](http://dimacs.rutgers.edu/files/1815/9845/6740/CVRP_Competition_Rules.pdf)._
 
+### How to call the solver indirectly via shell script
+Suppose a file named <i>solver</i> has the following content:
+```sh
+#!/usr/bin/env bash
+./real-solver $1 $2 
+```
+Therefore, you can use <i>solver</i> (after calling <i>chmod +x solver</i>) instead of the original executable file <i>real-solver</i> (which could have other command-line arguments in addition to the two defined in the challenge rules). 
+
 ## Meta
 
 Bruno Passeti – bruno@bravadus.com.br (UFPB)
