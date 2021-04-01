@@ -1,19 +1,19 @@
-# BKS from November, 17 found in http://vrp.atd-lab.inf.puc-rio.br/index.php/en/
-echo ./build/CVRPController $1 InstancesRounded/Antwerp1.vrp 1 $2 7200 477306 0 $3
+# BKS from November 18, 2020 found in http://vrp.atd-lab.inf.puc-rio.br/index.php/en/
+echo ./build/CVRPController $1 InstancesRounded/Antwerp1.vrp 1 $2 7200 477277 0 $3
 echo ./build/CVRPController $1 InstancesRounded/Antwerp2.vrp 1 $2 7200 291400 0 $3
-echo ./build/CVRPController $1 InstancesRounded/Brussels1.vrp 1 $2 7200 501854 0 $3
+echo ./build/CVRPController $1 InstancesRounded/Brussels1.vrp 1 $2 7200 501771 0 $3
 echo ./build/CVRPController $1 InstancesRounded/Brussels2.vrp 1 $2 7200 345565 0 $3
 echo ./build/CVRPController $1 InstancesRounded/E-n101-k14.vrp 1 $2 1800 1067 1 $3
 echo ./build/CVRPController $1 InstancesRounded/E-n101-k8.vrp 1 $2 1800 815 1 $3
-echo ./build/CVRPController $1 InstancesRounded/Flanders1.vrp 1 $2 7200 7241290 0 $3
+echo ./build/CVRPController $1 InstancesRounded/Flanders1.vrp 1 $2 7200 7240874 0 $3
 echo ./build/CVRPController $1 InstancesRounded/Flanders2.vrp 1 $2 7200 4377626 0 $3
 echo ./build/CVRPController $1 InstancesRounded/F-n135-k7.vrp 1 $2 1800 1162 1 $3
-echo ./build/CVRPController $1 InstancesRounded/Ghent1.vrp 1 $2 7200 469586 0 $3
+echo ./build/CVRPController $1 InstancesRounded/Ghent1.vrp 1 $2 7200 469532 0 $3
 echo ./build/CVRPController $1 InstancesRounded/Ghent2.vrp 1 $2 7200 257958 0 $3
-echo ./build/CVRPController $1 InstancesRounded/Leuven1.vrp 1 $2 7200 192851 0 $3
+echo ./build/CVRPController $1 InstancesRounded/Leuven1.vrp 1 $2 7200 192848 0 $3
 echo ./build/CVRPController $1 InstancesRounded/Leuven2.vrp 1 $2 7200 111489 0 $3
 echo ./build/CVRPController $1 InstancesRounded/P-n101-k4.vrp 1 $2 1800 681 1 $3
-echo ./build/CVRPController $1 InstancesRounded/X-n1001-k43.vrp 1 $2 7200 72359 0 $3
+echo ./build/CVRPController $1 InstancesRounded/X-n1001-k43.vrp 1 $2 7200 72355 0 $3
 echo ./build/CVRPController $1 InstancesRounded/X-n101-k25.vrp 1 $2 1800 27591 1 $3
 echo ./build/CVRPController $1 InstancesRounded/X-n106-k14.vrp 1 $2 1800 26362 1 $3
 echo ./build/CVRPController $1 InstancesRounded/X-n110-k13.vrp 1 $2 1800 14971 1 $3
@@ -101,7 +101,7 @@ echo ./build/CVRPController $1 InstancesRounded/X-n701-k44.vrp 1 $2 7200 81923 0
 echo ./build/CVRPController $1 InstancesRounded/X-n716-k35.vrp 1 $2 7200 43379 0 $3
 echo ./build/CVRPController $1 InstancesRounded/X-n733-k159.vrp 1 $2 7200 136190 0 $3
 echo ./build/CVRPController $1 InstancesRounded/X-n749-k98.vrp 1 $2 7200 77314 0 $3
-echo ./build/CVRPController $1 InstancesRounded/X-n766-k71.vrp 1 $2 7200 114454 0 $3
+echo ./build/CVRPController $1 InstancesRounded/X-n766-k71.vrp 1 $2 7200 114418 0 $3
 echo ./build/CVRPController $1 InstancesRounded/X-n783-k48.vrp 1 $2 7200 72394 0 $3
 echo ./build/CVRPController $1 InstancesRounded/X-n801-k40.vrp 1 $2 7200 73305 0 $3
 echo ./build/CVRPController $1 InstancesRounded/X-n819-k171.vrp 1 $2 7200 158121 0 $3
@@ -112,7 +112,7 @@ echo ./build/CVRPController $1 InstancesRounded/X-n895-k37.vrp 1 $2 7200 53860 0
 echo ./build/CVRPController $1 InstancesRounded/X-n916-k207.vrp 1 $2 7200 329179 0 $3
 echo ./build/CVRPController $1 InstancesRounded/X-n936-k151.vrp 1 $2 7200 132725 0 $3
 echo ./build/CVRPController $1 InstancesRounded/X-n957-k87.vrp 1 $2 7200 85465 0 $3
-echo ./build/CVRPController $1 InstancesRounded/X-n979-k58.vrp 1 $2 7200 118987 0 $3
+echo ./build/CVRPController $1 InstancesRounded/X-n979-k58.vrp 1 $2 7200 118976 0 $3
 echo ./build/CVRPController $1 InstancesNotRounded/CMT4.vrp 0 $2 1800 1028.42 1 $3
 echo ./build/CVRPController $1 InstancesNotRounded/CMT5.vrp 0 $2 1800 1291.29 1 $3
 echo ./build/CVRPController $1 InstancesNotRounded/Golden_10.vrp 0 $2 3600 735.43 0 $3
