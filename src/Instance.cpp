@@ -24,9 +24,11 @@ Instance::Instance(const char* instanciaPath) {
     else
         this->isExplicit = true;
 
-    if(isExplicit)
+    if(isExplicit) {
         fscanf(file, "EDGE_WEIGHT_FORMAT : %s\n", aux);
-        
+        fscanf(file, "NODE_COORD_TYPE : %*[^\n]\n");
+    }
+
     fscanf(file, "CAPACITY : %d\n", &capacity);
 
     if(!isExplicit){
