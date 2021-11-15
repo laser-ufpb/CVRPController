@@ -53,6 +53,15 @@ Instance::Instance(const char* instanciaPath) {
                 coordOrMatrix[j][i] = coordOrMatrix[i][j];
             }
         }
+
+        fscanf(file, "\n");
+        fscanf(file, "NODE_COORD_SECTION\n");
+        int vertex_index;
+        double x, y;
+        for (int i = 0; i < dimension; ++i) {
+            fscanf(file, "%d %lf %lf", &vertex_index, &x, &y);
+        }
+
     }
 
     fscanf(file, "\n");
