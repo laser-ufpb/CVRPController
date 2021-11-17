@@ -38,7 +38,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
             continue;
 
         // Check if solution found has cost greater than the value of baseSolution and if is not feasible
-        double eps = data.isRounded ? 0.0 : numeric_limits<double>::epsilon();
+        double eps = (data.distanceType != 0)  ? 0.0 : numeric_limits<double>::epsilon();
         if( !sol.checkSolution() || ((this->lastSolutionCostFound - sol.cost) < eps) ) {
             sol = T(data.getInstance());
             continue;
@@ -92,7 +92,7 @@ void Controller::run() {
 
     this->beginTime = std::chrono::high_resolution_clock::now();
 
-    if(data.isRounded) {
+    if(data.distanceType != 0) {
         iSolution sol = iSolution(data.getInstance());
         readStdoutFromChildProcess(sol);
     } else {

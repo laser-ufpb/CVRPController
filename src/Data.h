@@ -28,7 +28,7 @@ class Data {
 
   public:
     int isOptimal;
-    int isRounded;
+    int distanceType;
     int passMark;
     double baseSolution;
     double bestKnownSolution;
@@ -37,6 +37,7 @@ class Data {
     string path;
     string solverName;
     string euc_2d;
+    string timeLimitStr;
     Instance instance;
 
 
