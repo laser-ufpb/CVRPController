@@ -26,7 +26,7 @@ The output will be at `build/` as `DIMACS-CVRP-Dummy-X-n101-k25.out`.
 
 ### How to run:
 ```sh
-./CVRPController <Competitor ID> <Instance path> <Is rounded [0/1]> <CPU mark> <Time limit> <Instance BKS> <If BKS is optimal [0/1]> <Path to solver>
+./CVRPController <Competitor ID> <Instance path> <Distance type [0/1/2]> <CPU mark> <Time limit> <Instance BKS> <If BKS is optimal [0/1]> <Path to solver>
 ```
 
 ### Example:
@@ -55,9 +55,9 @@ _For more examples and usage, please refer to the [Competition Rules](http://dim
 Suppose a file named <i>solver</i> has the following content:
 ```sh
 #!/usr/bin/env bash
-./real-solver $1 $2 
+./real-solver $1 $2 $3
 ```
-Therefore, you can use <i>solver</i> (after calling <i>chmod +x solver</i>) instead of the original executable file <i>real-solver</i> (which could have other command-line arguments in addition to the two defined in the challenge rules). 
+Therefore, you can use <i>solver</i> (after calling <i>chmod +x solver</i>) instead of the original executable file <i>real-solver</i> (which could have other command-line arguments in addition to the three defined in the challenge rules). 
 
 ## Meta
 
