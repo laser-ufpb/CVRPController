@@ -12,6 +12,7 @@
 #include <string>
 #include <unistd.h>
 #include <vector>
+#include <unordered_map>
 #define LEN          256
 #define CPU_BASE_REF 2000
 

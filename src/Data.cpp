@@ -30,7 +30,7 @@ Data::Data(int argc, char* arguments[]) {
 }
 
 string Data::createHeader() {
-    string header = "12th DIMACS Implementation Challenge: Vehicle Routing\nCVRP track\nController version: November 17, 2021\nCompetitor: " 
+    string header = "12th DIMACS Implementation Challenge: Vehicle Routing\nCVRP track\nController version: December 6, 2021\nCompetitor: " 
                     + competitorName + "\n";
 
     try {
@@ -43,7 +43,17 @@ string Data::createHeader() {
 
 // Add machine's unique identifier
 #ifdef __linux__
-    sprintf(aux, "hostid: %ld\n", gethostid());
+    hash<string> hasher;
+    FILE* file = fopen("/etc/machine-id", "r");
+    if(!file) {
+        std::cout << "ERROR: This machine does not have /etc/machine-id, then the hostid cannot be generated!" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    fscanf(file, "%s", aux);
+    string machineid = string(aux);
+    fclose(file);
+    size_t hostid = hasher(machineid);
+    sprintf(aux, "hostid: %zu\n", hostid);
 #elif __OpenBSD__ || __freebsd__
     header += "hostid: ";
     char string_hostid[LEN];
