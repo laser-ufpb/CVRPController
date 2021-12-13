@@ -30,7 +30,7 @@ Data::Data(int argc, char* arguments[]) {
 }
 
 string Data::createHeader() {
-    string header = "12th DIMACS Implementation Challenge: Vehicle Routing\nCVRP track\nController version: December 6, 2021\nCompetitor: " 
+    string header = "12th DIMACS Implementation Challenge: Vehicle Routing\nCVRP track\nController version: December 13, 2021\nCompetitor: " 
                     + competitorName + "\n";
 
     try {

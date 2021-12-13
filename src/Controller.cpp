@@ -39,7 +39,7 @@ void Controller::readStdoutFromChildProcess(T sol) {
 
         // Check if solution found has cost greater than the value of baseSolution and if is not feasible
         double eps = (data.distanceType != 0)  ? 0.0 : numeric_limits<double>::epsilon();
-        if( !sol.checkSolution() || ((this->lastSolutionCostFound - sol.cost) < eps) ) {
+        if( !sol.checkSolution() || ((this->lastSolutionCostFound - sol.cost) <= eps) ) {
             sol = T(data.getInstance());
             continue;
         }
