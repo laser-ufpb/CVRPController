@@ -34,19 +34,19 @@ The output will be at `build/` as `DIMACS-CVRP-Dummy-X-n101-k25.out`.
 ./CVRPController Wolverine X-n120-k6.vrp 1 2064 1800 13332 1 Solver1
 ```
 
-### How to run all instances:
-Generating the script:
+### How to run the instances:
+Generating a script:
 ```sh
-sh genScript.sh <Competitor ID> <CPU mark> <Solver path> > CVRP-Script1.sh
+sh genScript1.sh <Competitor ID> <CPU mark> <Solver path> > CVRP-Script1.sh
 ```
-Running all instances:
+Running the instances:
 ```sh
 sh CVRP-Script1.sh
 ```
 
 ### Example:
 ```sh
-sh genScript.sh Wolverine 2064 Solver1 > CVRP-Script1.sh
+sh genScript1.sh Wolverine 2064 Solver1 > CVRP-Script1.sh
 sh CVRP-Script1.sh
 ```
 _For more examples and usage, please refer to the [Competition Rules](http://dimacs.rutgers.edu/files/1815/9845/6740/CVRP_Competition_Rules.pdf)._
