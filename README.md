@@ -44,6 +44,8 @@ Running the instances:
 sh CVRP-Script1.sh
 ```
 
+to run all the instances, you also have to run the scripts genScript2.sh and genScript3.sh.
+
 ### Example:
 ```sh
 sh genScript1.sh Wolverine 2064 Solver1 > CVRP-Script1.sh
