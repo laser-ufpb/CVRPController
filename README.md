@@ -1,5 +1,5 @@
 # CVRPController
-> CVRPController is used to run and calculate score for the 12th DIMACS Implementation Challenge: CVRP track. Specified in [Competition Rules](http://dimacs.rutgers.edu/files/1815/9845/6740/CVRP_Competition_Rules.pdf).
+> CVRPController is used to run and calculate score for the 12th DIMACS Implementation Challenge: CVRP track. Specified in [Competition Rules](http://dimacs.rutgers.edu/files/6916/3848/0327/CVRP_Competition_Rules.pdf).
 
 ## Installation
 
@@ -49,7 +49,7 @@ sh CVRP-Script1.sh
 sh genScript1.sh Wolverine 2064 Solver1 > CVRP-Script1.sh
 sh CVRP-Script1.sh
 ```
-_For more examples and usage, please refer to the [Competition Rules](http://dimacs.rutgers.edu/files/1815/9845/6740/CVRP_Competition_Rules.pdf)._
+_For more examples and usage, please refer to the [Competition Rules](http://dimacs.rutgers.edu/files/6916/3848/0327/CVRP_Competition_Rules.pdf)._
 
 ### How to call the solver indirectly via shell script
 Suppose a file named <i>solver</i> has the following content:
