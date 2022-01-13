@@ -1,4 +1,4 @@
-NAME : Loggi-n600-k42
+NAME : Loggi-n601-k42
 COMMENT : LoggiBUD cvrp-rj-600, extracted from a real problem in the metropolitan area of Rio de Janeiro (Brazil)
 TYPE : CVRP
 DIMENSION : 601
